@@ -2,7 +2,6 @@ name: Pipeline de Coleta do YouTube
 
 on:
   schedule:
-    # Roda de hora em hora
     - cron: '0 * * * *'
   workflow_dispatch: # Permite rodar manualmente no painel do GitHub
 
@@ -12,12 +11,12 @@ jobs:
 
     steps:
       - name: Baixar repositório
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Executar Script de Importação
         run: node importador.js
