@@ -22,10 +22,8 @@ jobs:
       - name: Executar Script de Importação
         run: |
           if [ "$(date +%H)" = "03" ]; then
-            echo "⏰ Horário da Varredura Completa..."
             node importador.js --completa
           else
-            echo "⏰ Executando Checagem Rápida..."
             node importador.js
           fi
         env:
