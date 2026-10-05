@@ -1,0 +1,32 @@
+name: Pipeline de Coleta do YouTube
+
+on:
+  schedule:
+    # Roda de hora em hora
+    - cron: '0 * * * *'
+  workflow_dispatch: # Permite rodar manualmente no painel do GitHub
+
+jobs:
+  executar-importador:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Executar Script de Importação
+        run: node importador.js
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: Salvar alterações no Git (Auto Commit)
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add videos_bruto.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "bot: atualiza banco de dados de vídeos bruto" && git push)
