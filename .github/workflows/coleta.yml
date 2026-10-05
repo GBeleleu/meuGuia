@@ -3,7 +3,7 @@ name: Pipeline de Coleta do YouTube
 on:
   schedule:
     - cron: '0 * * * *'
-  workflow_dispatch: # Permite rodar manualmente no painel do GitHub
+  workflow_dispatch: # Permite rodar manualmente escolhendo a rotina no painel do GitHub
 
 jobs:
   executar-importador:
@@ -18,8 +18,16 @@ jobs:
         with:
           node-version: '22'
 
+      # Se for 03:00 UTC (00:00 Horário de Brasília), executa --completa, senão executa a rápida
       - name: Executar Script de Importação
-        run: node importador.js
+        run: |
+          if [ "$(date +%H)" = "03" ]; then
+            echo "⏰ Horário da Varredura Completa..."
+            node importador.js --completa
+          else
+            echo "⏰ Executando Checagem Rápida..."
+            node importador.js
+          fi
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
