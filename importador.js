@@ -140,7 +140,7 @@ async function buscarApenasNovosVideos(listaChannelIds, idsConhecidosSet) {
 }
 
 // ============================================================================
-// 3. PERSISTÊNCIA EM ARQUIVO (LOCAL REPOSITORY FS)
+// 3. PERSISTÊNCIA E SINCRONIZAÇÃO DE STATUS
 // ============================================================================
 
 async function salvarDados(dados) {
@@ -160,15 +160,63 @@ function carregarDadosLocais() {
   return [];
 }
 
-// Tarefa 1: Executada periodicamente via Cron/GitHub Actions (ex: 1x por dia)
+/**
+ * Tarefa 1: Varredura Completa e Reconciliação de Status
+ * Executada periodicamente (ex: 1x por dia).
+ * Baixa os vídeos das playlists e valida o status atual de TODOS os IDs conhecidos
+ * na base local, marcando vídeos deletados/ausentes como privacyStatus: "removed".
+ */
 async function tarefaVarreduraCompleta(listaChannelIds = LISTA_CANAL_IDS) {
-  console.log("⏰ Executando: Varredura Completa...");
-  const dados = await importarCanaisCompleto(listaChannelIds);
-  await salvarDados(dados);
-  console.log("✅ Varredura completa finalizada!");
+  console.log("⏰ Executando: Varredura Completa e Reconciliação...");
+
+  // 1. Coleta o estado atual das playlists públicas (UU)
+  const videosDasPlaylists = await importarCanaisCompleto(listaChannelIds);
+
+  // 2. Carrega o histórico existente para mapear todos os IDs já conhecidos
+  const baseAtual = carregarDadosLocais();
+  const mapaVideosExistentes = new Map(baseAtual.map(v => [v.videoId, v]));
+
+  // 3. Mescla os vídeos recém-encontrados na playlist no mapa local
+  for (const v of videosDasPlaylists) {
+    mapaVideosExistentes.set(v.videoId, v);
+  }
+
+  // 4. Monta a lista completa de IDs para consultar na API em lotes de 50
+  const todosOsIds = Array.from(mapaVideosExistentes.keys());
+  let dadosReconciliados = [];
+
+  for (let i = 0; i < todosOsIds.length; i += 50) {
+    const loteIds = todosOsIds.slice(i, i + 50);
+    const detalhesLoteAPI = await obterDetalhesDoLote(loteIds);
+
+    // Mapeia o resultado retornado pela API para validação rápida
+    const mapaLoteAPI = new Map(detalhesLoteAPI.map(v => [v.videoId, v]));
+
+    for (const id of loteIds) {
+      const videoLocal = mapaVideosExistentes.get(id);
+
+      if (mapaLoteAPI.has(id)) {
+        // Vídeo existe na API: atualiza metadados e mantém privacyStatus (public/private/unlisted)
+        dadosReconciliados.push(mapaLoteAPI.get(id));
+      } else {
+        // Vídeo NÃO foi retornado pela API: foi removido/deletado no YouTube
+        dadosReconciliados.push({
+          ...videoLocal,
+          privacyStatus: 'removed' // Marcação explícita para o tratador
+        });
+      }
+    }
+  }
+
+  // 5. Salva a base completa sincronizada no arquivo local
+  await salvarDados(dadosReconciliados);
+  console.log(`✅ Varredura completa finalizada: ${dadosReconciliados.length} vídeos verificados.`);
 }
 
-// Tarefa 2: Executada periodicamente via Cron/GitHub Actions (ex: de hora em hora)
+/**
+ * Tarefa 2: Checagem Rápida de Novos Vídeos (Early Exit)
+ * Executada periodicamente via Cron (ex: de hora em hora)
+ */
 async function tarefaChecagemRapida(listaChannelIds = LISTA_CANAL_IDS) {
   console.log("⏰ Executando: Checagem Rápida...");
   
