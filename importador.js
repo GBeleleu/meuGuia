@@ -239,10 +239,25 @@ async function tarefaChecagemRapida(listaChannelIds = LISTA_CANAL_IDS) {
 // 4. EXECUTOR DE LINHA DE COMANDO (GITHUB ACTIONS ENTRYPOINT)
 // ============================================================================
 
-const modoCompleto = process.argv.includes('--completa');
+async function executarPipeline() {
+  const baseAtual = carregarDadosLocais();
+  const modoCompletoSolicitado = process.argv.includes('--completa');
+  const baseVaziaOuInexistente = baseAtual.length === 0;
 
-if (modoCompleto) {
-  tarefaVarreduraCompleta();
-} else {
-  tarefaChecagemRapida();
+  // Prioridade Máxima: Se o banco estiver vazio/inexistente, força a Varredura Completa
+  if (baseVaziaOuInexistente) {
+    console.log("⚠️  Base local não encontrada ou vazia! Iniciando Carga Inicial via Varredura Completa...");
+    await tarefaVarreduraCompleta();
+  } else if (modoCompletoSolicitado) {
+    console.log("⏰ Solicitação de Varredura Completa agendada/manual...");
+    await tarefaVarreduraCompleta();
+  } else {
+    await tarefaChecagemRapida();
+  }
 }
+
+// Dispara a execução principal do pipeline com tratamento de erros
+executarPipeline().catch(err => {
+  console.error("❌ Erro fatal durante a execução do pipeline:", err);
+  process.exit(1);
+});
