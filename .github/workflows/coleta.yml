@@ -1,4 +1,4 @@
-name: Pipeline de Coleta do YouTube
+name: Pipeline de Coleta e Tratamento do YouTube
 
 on:
   schedule:
@@ -8,15 +8,22 @@ on:
     # 2. Varredura Completa
     - cron: '21 3 * * *'
 
-  workflow_dispatch: # Execução manual
+  workflow_dispatch: # Execução manual via painel do GitHub
     inputs:
+      acao:
+        description: 'Selecione o tipo de execução:'
+        type: choice
+        default: 'importador_e_tratador'
+        options:
+          - 'importador_e_tratador'
+          - 'apenas_tratador'
       modo_completo:
-        description: 'Forçar Varredura Completa'
+        description: 'Forçar Varredura Completa na API (Importador)'
         type: boolean
         default: false
 
 jobs:
-  executar-importador:
+  executar-pipeline:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,11 +34,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
+          
+      # 1. PASSO DO IMPORTADOR (Condicional)
       # 03:00 UTC (00:00 Horário de Brasília) executa --completa, senão executa a rápida
       - name: Executar Script de Importação
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.acao == 'importador_e_tratador' }}
         run: |
-          # Se o gatilho foi a cron ou acionado manualmente
           if [ "${{ github.event.schedule }}" = "21 3 * * *" ] || [ "${{ github.event.inputs.modo_completo }}" = "true" ]; then
             node importador.js --completa
           else
@@ -40,9 +48,25 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      # 2. VERIFICA SE O BANCO BRUTO FOI ALTERADO PELO IMPORTADOR
+      - name: Verificar alterações no videos_bruto.json
+        id: check_bruto
+        run: |
+          if git diff --name-only | grep -q 'videos_bruto.json'; then
+            echo "bruto_alterado=true" >> $GITHUB_OUTPUT
+          else
+            echo "bruto_alterado=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 3. PASSO DO TRATADOR (Roda se: houve mudança no bruto OR foi acionado manual OR pediu 'apenas_tratador')
+      - name: Executar Script de Tratamento (ETL)
+        if: ${{ steps.check_bruto.outputs.bruto_alterado == 'true' || github.event.inputs.acao == 'apenas_tratador' || github.event.inputs.modo_completo == 'true' }}
+        run: node tratador.js
+
+      # 4. COMMIT AUTOMÁTICO DAS ALTERAÇÕES
       - name: Salvar alterações no Git (Auto Commit)
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add videos_bruto.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "bot: atualiza banco de dados de vídeos bruto" && git push)
+          git add videos_bruto.json database.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "bot: atualiza banco de dados" && git push)
