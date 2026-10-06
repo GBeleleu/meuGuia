@@ -2,8 +2,18 @@ name: Pipeline de Coleta do YouTube
 
 on:
   schedule:
+    # 1. Checagem Rápida
     - cron: '0 * * * *'
-  workflow_dispatch: # Permite rodar manualmente escolhendo a rotina no painel do GitHub
+    
+    # 2. Varredura Completa
+    - cron: '21 3 * * *'
+
+  workflow_dispatch: # Execução manual
+    inputs:
+      modo_completo:
+        description: 'Forçar Varredura Completa?'
+        type: boolean
+        default: false
 
 jobs:
   executar-importador:
@@ -18,10 +28,11 @@ jobs:
         with:
           node-version: '22'
 
-      # Se for 03:00 UTC (00:00 Horário de Brasília), executa --completa, senão executa a rápida
+      # 03:00 UTC (00:00 Horário de Brasília) executa --completa, senão executa a rápida
       - name: Executar Script de Importação
         run: |
-          if [ "$(date +%H)" = "03" ]; then
+          # Se o gatilho foi a cron ou acionado manualmente
+          if [ "${{ github.event.schedule }}" = "21 3 * * *" ] || [ "${{ github.event.inputs.modo_completo }}" = "true" ]; then
             node importador.js --completa
           else
             node importador.js
