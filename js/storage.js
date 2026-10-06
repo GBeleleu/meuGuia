@@ -1,4 +1,4 @@
-// Módulo de Armazenamento e Leitura de Dados
+// js/storage.js - Gerenciamento de Armazenamento e Leitura de Dados
 
 const OVERRIDE_STORAGE_KEY = 'jamstack_override_data';
 
@@ -18,7 +18,7 @@ export async function loadDatabase() {
 
 /**
  * Busca o arquivo override.json localizado no mesmo diretório.
- * Se não for encontrado no servidor, recorre aos dados salvos no localStorage.
+ * Se não for encontrado no servidor/Pages, recorre aos dados salvos no localStorage.
  */
 export async function loadInitialOverrides() {
   try {
@@ -34,11 +34,11 @@ export async function loadInitialOverrides() {
             overrideMap[item.videoId] = item.masterId;
           }
         });
-      } else if (typeof remoteData === 'object') {
+      } else if (typeof remoteData === 'object' && remoteData !== null) {
         Object.assign(overrideMap, remoteData);
       }
 
-      // Sincroniza com o localStorage
+      // Sincroniza o arquivo do servidor com o cache do localStorage
       localStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(overrideMap));
       return overrideMap;
     }
@@ -51,7 +51,7 @@ export async function loadInitialOverrides() {
 }
 
 /**
- * Lê os overrides salvos atualmente no localStorage
+ * Lê os overrides salvos atualmente no localStorage do navegador
  */
 export function getLocalOverrides() {
   const data = localStorage.getItem(OVERRIDE_STORAGE_KEY);
@@ -59,7 +59,7 @@ export function getLocalOverrides() {
 }
 
 /**
- * Atualiza ou insere um novo Master ID no override
+ * Atualiza ou insere um novo Master ID no override e persiste no localStorage
  */
 export function setOverride(videoId, newMasterId) {
   const overrides = getLocalOverrides();
@@ -68,7 +68,7 @@ export function setOverride(videoId, newMasterId) {
 }
 
 /**
- * Realiza o download do arquivo JSON de override formatado
+ * Realiza o download do arquivo override.json formatado como Array de Objetos
  */
 export function downloadOverrideFile() {
   const overrides = getLocalOverrides();
