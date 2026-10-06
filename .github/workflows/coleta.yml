@@ -3,7 +3,7 @@ name: Pipeline de Coleta do YouTube
 on:
   schedule:
     # 1. Checagem Rápida
-    - cron: '0 * * * *'
+    - cron: '21 * * * *'
     
     # 2. Varredura Completa
     - cron: '21 3 * * *'
@@ -11,7 +11,7 @@ on:
   workflow_dispatch: # Execução manual
     inputs:
       modo_completo:
-        description: 'Forçar Varredura Completa?'
+        description: 'Forçar Varredura Completa'
         type: boolean
         default: false
 
