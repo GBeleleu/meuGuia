@@ -30,7 +30,8 @@
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: var(--font-family);
-      padding-top: 130px; /* Espaço para a barra fixa superior */
+      /* O padding-top será ajustado via JavaScript dinamicamente para evitar sobreposição */
+      padding-top: 140px; 
       min-height: 100vh;
     }
 
@@ -44,15 +45,15 @@
       width: 100%;
       background-color: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
-      padding: 12px 20px;
+      padding: 12px 16px;
       z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     }
 
     .controls-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 10px;
       align-items: center;
       justify-content: space-between;
       max-width: 1200px;
@@ -61,12 +62,12 @@
 
     .search-box {
       flex: 1;
-      min-width: 250px;
+      min-width: 220px;
     }
 
     .search-box input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
       background-color: var(--bg-primary);
@@ -76,12 +77,13 @@
 
     .filter-group {
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
       align-items: center;
     }
 
     select, button {
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
       background-color: var(--bg-primary);
@@ -94,21 +96,40 @@
       border-color: var(--accent-color);
     }
 
-    .nav-time-group {
+    button:disabled, select:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--border-color) !important;
+    }
+
+    /* Controles de Navegação por Data */
+    .nav-time-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-unit {
       display: flex;
       align-items: center;
-      gap: 5px;
       background: var(--bg-primary);
-      padding: 4px 8px;
-      border-radius: 6px;
       border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 2px 4px;
+    }
+
+    .nav-unit select {
+      border: none;
+      background: transparent;
+      padding: 4px 2px;
     }
 
     .arrow-btn {
-      padding: 2px 6px;
-      font-size: 12px;
+      padding: 2px 5px;
+      font-size: 10px;
       background: transparent;
       border: none;
+      line-height: 1;
     }
 
     /* ==========================================================================
@@ -116,8 +137,17 @@
        ========================================================================== */
     .container {
       max-width: 900px;
-      margin: 20px auto;
-      padding: 0 15px;
+      margin: 15px auto;
+      padding: 0 12px;
+    }
+
+    .channel-group-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin: 24px 0 12px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .status-message {
@@ -140,11 +170,22 @@
     .card {
       background-color: var(--bg-card);
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
       display: flex;
-      gap: 16px;
+      gap: 14px;
       border: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        flex-direction: column;
+      }
+      .card-thumb {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+      }
     }
 
     .card-thumb {
@@ -164,12 +205,13 @@
 
     /* Destaque para títulos compridos */
     .card-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--accent-color);
       text-decoration: none;
-      line-height: 1.3;
+      line-height: 1.35;
       margin-bottom: 6px;
+      display: inline-block;
     }
 
     .card-title:hover {
@@ -181,7 +223,7 @@
       color: var(--text-muted);
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       margin-top: 8px;
     }
 
@@ -189,12 +231,14 @@
     .videoid-tag {
       font-family: monospace;
       font-size: 10px;
-      color: #666;
+      color: #666666;
     }
 
     .status-removed {
       color: #ff5555;
       font-weight: bold;
+      font-size: 12px;
+      margin-left: 6px;
     }
 
     /* Subdiretório / Gaveta para repetidos */
@@ -203,31 +247,103 @@
       background: transparent;
       color: var(--accent-color);
       border: 1px dashed var(--accent-color);
-      padding: 4px 8px;
-      font-size: 11px;
+      padding: 5px 10px;
+      font-size: 12px;
+      align-self: flex-start;
     }
 
     .drawer-content {
-      margin-top: 10px;
-      padding-left: 15px;
+      margin-top: 12px;
+      padding-left: 12px;
       border-left: 2px solid var(--accent-color);
       display: none;
+      background-color: var(--bg-drawer);
+      border-radius: 0 8px 8px 0;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .drawer-content.open {
       display: block;
+    }
+
+    /* ==========================================================================
+       4. MODAL DE FILTRO DE CANAIS
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 480px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      flex: 1;
+      margin-bottom: 12px;
+    }
+
+    .channel-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
   </style>
 </head>
 <body>
 
   <!-- BARRA FIXA SUPERIOR -->
-  <header class="top-bar">
+  <header class="top-bar" id="topBar">
     <div class="controls-container">
       
-      <!-- Busca Instantânea -->
+      <!-- Busca Instantânea sem Vogais/Flexível -->
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar por título (ex: OBSIDIANA)...">
+        <input type="text" id="searchInput" placeholder="Buscar título (ex: OBSIDIANA)...">
       </div>
 
       <!-- Modos de Visualização & Ordenamento -->
@@ -235,25 +351,41 @@
         <select id="viewModeSelect">
           <option value="consolidado">Consolidado (Apenas Masters)</option>
           <option value="sequenciado">Sequenciado (Cronológico)</option>
+          <option value="sequenciado-canais">Sequenciado (Blocos por Canal)</option>
         </select>
 
-        <button id="sortOrderBtn" title="Inverter Ordem">Ordem: Asc ascendente</button>
+        <select id="sortBySelect">
+          <option value="data">Data de Publicação</option>
+          <option value="titulo">Título</option>
+          <option value="duracao">Duração</option>
+        </select>
+
+        <button id="sortOrderBtn" title="Inverter Ordem">Asc ▲</button>
+        <button id="channelsModalBtn">Filtro Canais</button>
       </div>
 
-      <!-- Navegação Auxiliar de Rolagem (Ano e Mês) -->
-      <div class="nav-time-group">
-        <button class="arrow-btn" id="navUpBtn">▲</button>
-        <select id="yearSelect"><option value="">Ano</option></select>
-        <select id="monthSelect">
-          <option value="">Mês</option>
-          <option value="0">Jan</option><option value="1">Fev</option>
-          <option value="2">Mar</option><option value="3">Abr</option>
-          <option value="4">Mai</option><option value="5">Jun</option>
-          <option value="6">Jul</option><option value="7">Ago</option>
-          <option value="8">Set</option><option value="9">Out</option>
-          <option value="10">Nov</option><option value="11">Dez</option>
-        </select>
-        <button class="arrow-btn" id="navDownBtn">▼</button>
+      <!-- Navegação Auxiliar de Rolagem (Ano e Mês com Setas Individuais) -->
+      <div class="nav-time-container" id="navTimeContainer">
+        <!-- Ano -->
+        <div class="nav-unit">
+          <button class="arrow-btn" id="yearUpBtn">▲</button>
+          <select id="yearSelect"><option value="">Ano</option></select>
+          <button class="arrow-btn" id="yearDownBtn">▼</button>
+        </div>
+        <!-- Mês -->
+        <div class="nav-unit">
+          <button class="arrow-btn" id="monthUpBtn">▲</button>
+          <select id="monthSelect">
+            <option value="">Mês</option>
+            <option value="0">Jan</option><option value="1">Fev</option>
+            <option value="2">Mar</option><option value="3">Abr</option>
+            <option value="4">Mai</option><option value="5">Jun</option>
+            <option value="6">Jul</option><option value="7">Ago</option>
+            <option value="8">Set</option><option value="9">Out</option>
+            <option value="10">Nov</option><option value="11">Dez</option>
+          </select>
+          <button class="arrow-btn" id="monthDownBtn">▼</button>
+        </div>
       </div>
 
     </div>
@@ -264,89 +396,98 @@
     <div class="status-message">Carregando dados...</div>
   </main>
 
+  <!-- MODAL DE FILTRO POR CANAL -->
+  <div class="modal-overlay" id="channelsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Filtrar por Canal</h3>
+        <button id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="channelsListContainer">
+        <!-- Checkboxes de canais inseridos dinamicamente -->
+      </div>
+      <div class="modal-actions">
+        <div>
+          <button id="selectAllChannelsBtn">Marcar Todos</button>
+          <button id="deselectAllChannelsBtn">Desmarcar Todos</button>
+        </div>
+        <button id="applyChannelsBtn" style="border-color: var(--accent-color);">Aplicar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ==========================================================================
-       4. VARIÁVEIS DE CONFIGURAÇÃO & ESTADO GLOBAL
+       5. CONFIGURAÇÕES E ESTADO GLOBAL
        ========================================================================== */
     const CONFIG = {
       DEBOUNCE_DELAY_MS: 300,
-      LOCALSTORAGE_KEY: 'app_video_list_state',
+      LOCALSTORAGE_KEY: 'app_video_list_official_state',
       DATA_URL: 'database.json'
     };
 
-    let videoDatabase = []; // Armazenará os dados vindos do fetch
+    let videoDatabase = []; // Array de dados carregados do JSON
 
     let state = {
       searchQuery: '',
-      viewMode: 'consolidado',
+      viewMode: 'consolidado', // consolidado | sequenciado | sequenciado-canais
+      sortBy: 'data',          // data | titulo | duracao
       sortAscending: true,
-      selectedYear: '',
-      selectedMonth: '',
+      hiddenChannels: [],      // Lista de canais ocultados
       scrollY: 0
     };
 
     let debounceTimer = null;
+    let observer = null;
 
     /* ==========================================================================
-       5. FUNÇÕES AUXILIARES DE TRATAMENTO DE TEXTO E DATA
+       6. FUNÇÕES AUXILIARES (TEXTO, DURAÇÃO, DATAS)
        ========================================================================== */
 
-    // Normalização para buscas flexíveis (desconsidera acentos e maiúsculas)
+    // Normalização flexível desconsiderando acentos e vogais
     function normalizeText(str) {
       if (!str) return '';
       return str
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/e/g, 'i') // Permite variações simples tipo OBSIDIANA / OBSEDIANA
+        .replace(/[aeiou]/g, '') // Desconsidera todas as vogais
         .replace(/[^a-z0-9]/g, '');
     }
 
-    // Formatação da data e hora local
+    // Formatação de data/hora para fuso horário e idioma local do dispositivo
     function formatLocalDateTime(isoDateStr) {
+      if (!isoDateStr) return '';
       const date = new Date(isoDateStr);
-      return date.toLocaleString(); // Usa o fuso horário/idioma local do navegador
+      return date.toLocaleString();
     }
 
-    /* ==========================================================================
-       6. CARREGAMENTO ASSÍNCRONO E PERSISTÊNCIA DE ESTADO (Fetch / LocalStorage)
-       ========================================================================== */
-    async function loadDatabase() {
-      const container = document.getElementById('videoListContainer');
-      try {
-        const response = await fetch(CONFIG.DATA_URL);
-        if (!response.ok) {
-          throw new Error(`Erro HTTP ${response.status}: Não foi possível carregar o arquivo ${CONFIG.DATA_URL}`);
-        }
-        
-        videoDatabase = await response.json();
-        
-        if (!Array.isArray(videoDatabase)) {
-          throw new Error('Formato inválido: O arquivo JSON deve conter um Array de objetos.');
-        }
+    // Formatação de segundos no padrão de tempo do YouTube (HH:MM:SS ou MM:SS)
+    function formatDuration(totalSeconds) {
+      if (!totalSeconds || isNaN(totalSeconds)) return '0:00';
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-        // Renderiza após carregar com sucesso
-        populateYearSelector();
-        renderList();
+      const pad = (num) => String(num).padStart(2, '0');
 
-        // Restaura posição de rolagem salva previamente
-        if (state.scrollY) {
-          window.scrollTo(0, state.scrollY);
-        }
+      if (hours > 0) {
+        return `${hours}:${pad(minutes)}:${pad(seconds)}`;
+      }
+      return `${minutes}:${pad(seconds)}`;
+    }
 
-      } catch (error) {
-        container.innerHTML = `
-          <div class="error-message">
-            <h3>Falha ao carregar a base de dados</h3>
-            <p style="margin-top: 8px;">${error.message}</p>
-            <p style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
-              Certifique-se de que o arquivo <strong>database.json</strong> está no mesmo diretório do <strong>index.html</strong> e que você está acessando a página por um servidor (Ex: GitHub Pages, Live Server ou localhost).
-            </p>
-          </div>
-        `;
+    // Redimensiona o padding do Body de acordo com a altura da barra fixa
+    function adjustBodyPadding() {
+      const topBar = document.getElementById('topBar');
+      if (topBar) {
+        document.body.style.paddingTop = `${topBar.offsetHeight + 15}px`;
       }
     }
 
+    /* ==========================================================================
+       7. PERSISTÊNCIA DE ESTADO E CARREGAMENTO
+       ========================================================================== */
     function saveState() {
       state.scrollY = window.scrollY;
       localStorage.setItem(CONFIG.LOCALSTORAGE_KEY, JSON.stringify(state));
@@ -355,49 +496,106 @@
     function loadState() {
       const saved = localStorage.getItem(CONFIG.LOCALSTORAGE_KEY);
       if (saved) {
-        state = { ...state, ...JSON.parse(saved) };
-        document.getElementById('searchInput').value = state.searchQuery || '';
-        document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
-        updateSortBtnText();
+        try {
+          state = { ...state, ...JSON.parse(saved) };
+          document.getElementById('searchInput').value = state.searchQuery || '';
+          document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
+          document.getElementById('sortBySelect').value = state.sortBy || 'data';
+          updateSortBtnText();
+        } catch (e) {
+          console.error("Erro ao carregar o estado:", e);
+        }
+      }
+    }
+
+    async function loadDatabase() {
+      const container = document.getElementById('videoListContainer');
+      try {
+        const response = await fetch(CONFIG.DATA_URL);
+        if (!response.ok) {
+          throw new Error(`Erro HTTP ${response.status}: Não foi possível acessar ${CONFIG.DATA_URL}`);
+        }
+        
+        videoDatabase = await response.json();
+        
+        if (!Array.isArray(videoDatabase)) {
+          throw new Error('Estrutura inválida: O JSON deve conter uma lista (array) de objetos.');
+        }
+
+        populateYearSelector();
+        populateChannelsModal();
+        renderList();
+
+        if (state.scrollY) {
+          window.scrollTo(0, state.scrollY);
+        }
+
+      } catch (error) {
+        container.innerHTML = `
+          <div class="error-message">
+            <h3>Erro de Carregamento</h3>
+            <p style="margin-top:8px;">${error.message}</p>
+            <p style="margin-top:8px; font-size:12px; color: var(--text-muted);">
+              Verifique se o arquivo <strong>database.json</strong> está na mesma pasta que o <strong>index.html</strong> e executando através de um servidor local ou GitHub Pages.
+            </p>
+          </div>
+        `;
       }
     }
 
     /* ==========================================================================
-       7. PROCESSAMENTO E RENDERIZAÇÃO DA LISTA
+       8. PROCESSAMENTO, RENDERIZAÇÃO E CARDS
        ========================================================================== */
     function renderList() {
       const container = document.getElementById('videoListContainer');
       container.innerHTML = '';
 
       if (videoDatabase.length === 0) {
-        container.innerHTML = '<div class="status-message">Nenhum vídeo encontrado.</div>';
+        container.innerHTML = '<div class="status-message">Nenhum vídeo cadastrado.</div>';
         return;
       }
 
-      // 1. Filtragem por Busca
+      // 1. Ocultar Canais Desmarcados
+      let items = videoDatabase.filter(item => !state.hiddenChannels.includes(item.canal));
+
+      // 2. Filtragem por Busca sem Vogais
       const normalizedQuery = normalizeText(state.searchQuery);
-      let items = videoDatabase.filter(item => {
-        return normalizeText(item.titulo).includes(normalizedQuery);
-      });
+      if (normalizedQuery) {
+        items = items.filter(item => normalizeText(item.titulo).includes(normalizedQuery));
+      }
 
       if (items.length === 0) {
-        container.innerHTML = '<div class="status-message">Nenhum resultado corresponde à sua busca.</div>';
+        container.innerHTML = '<div class="status-message">Nenhum resultado corresponde aos filtros aplicados.</div>';
         return;
       }
 
-      // 2. Ordenação
+      // 3. Ordenação Dinâmica
       items.sort((a, b) => {
-        const dateA = new Date(a.dataPublicacao);
-        const dateB = new Date(b.dataPublicacao);
-        return state.sortAscending ? dateA - dateB : dateB - dateA;
+        let valA, valB;
+        if (state.sortBy === 'titulo') {
+          valA = a.titulo.toLowerCase();
+          valB = b.titulo.toLowerCase();
+          return state.sortAscending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else if (state.sortBy === 'duracao') {
+          valA = a.duracaoSegundos || 0;
+          valB = b.duracaoSegundos || 0;
+        } else {
+          // 'data'
+          valA = new Date(a.dataPublicacao);
+          valB = new Date(b.dataPublicacao);
+        }
+        return state.sortAscending ? valA - valB : valB - valA;
       });
 
-      // 3. Aplicação do Modo de Visualização
+      // Habilita/Desabilita seletores de data baseando-se na ordenação por data
+      const isDateSorted = state.sortBy === 'data';
+      toggleDateNavControls(isDateSorted);
+
+      // 4. Modos de Visualização
       if (state.viewMode === 'consolidado') {
         const masterMap = new Map();
         const duplicatesMap = new Map();
 
-        // Separa masters e cópias
         items.forEach(item => {
           if (item.isMaster) {
             masterMap.set(item.videoId, item);
@@ -409,21 +607,43 @@
           }
         });
 
-        // Exibe apenas masters com suas gavetas
         masterMap.forEach(masterItem => {
           const duplicates = duplicatesMap.get(masterItem.videoId) || [];
           container.appendChild(createCardElement(masterItem, duplicates));
         });
 
+      } else if (state.viewMode === 'sequenciado-canais') {
+        // Agrupado por Blocos de Canal
+        const channelGroups = new Map();
+        items.forEach(item => {
+          if (!channelGroups.has(item.canal)) {
+            channelGroups.set(item.canal, []);
+          }
+          channelGroups.get(item.canal).push(item);
+        });
+
+        channelGroups.forEach((groupItems, channelName) => {
+          const groupTitle = document.createElement('div');
+          groupTitle.className = 'channel-group-title';
+          groupTitle.textContent = channelName;
+          container.appendChild(groupTitle);
+
+          groupItems.forEach(item => {
+            container.appendChild(createCardElement(item, []));
+          });
+        });
+
       } else {
-        // Sequenciado: Exibe todos sequencialmente
+        // Sequenciado Cronológico Simples
         items.forEach(item => {
           container.appendChild(createCardElement(item, []));
         });
       }
+
+      setupScrollObserver();
     }
 
-    // Criação do Card HTML
+    // Criação do Elemento HTML do Card
     function createCardElement(item, duplicates = []) {
       const card = document.createElement('div');
       card.className = 'card';
@@ -435,12 +655,13 @@
       const thumbUrl = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
       const videoUrl = `https://www.youtube.com/watch?v=${item.videoId}`;
 
+      // Exibe aviso de removido apenas se privacyStatus for "removed"
       let privacyNotice = item.privacyStatus === 'removed' 
-        ? `<span class="status-removed">(Removido)</span>` 
+        ? `<span class="status-removed">(Vídeo removido)</span>` 
         : '';
 
       card.innerHTML = `
-        <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail">
+        <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail" loading="lazy">
         <div class="card-content">
           <div>
             <a href="${videoUrl}" target="_blank" class="card-title">${item.titulo}</a>
@@ -448,24 +669,27 @@
           </div>
           <div class="card-metadata">
             <span><strong>Canal:</strong> ${item.canal}</span>
+            <span><strong>Duração:</strong> ${formatDuration(item.duracaoSegundos)}</span>
             <span><strong>Publicado:</strong> ${formatLocalDateTime(item.dataPublicacao)}</span>
             <span class="videoid-tag">ID: ${item.videoId}</span>
           </div>
           ${duplicates.length > 0 ? `
             <button class="drawer-toggle" onclick="toggleDrawer(this)">
-              Ver +${duplicates.length} ocorrência(s)
+              Gaveta (+${duplicates.length} ocorrência(s))
             </button>
-            <div class="drawer-content">
-              ${duplicates.map(dup => `
-                <div style="margin-top: 6px; font-size: 12px;">
-                  <a href="https://www.youtube.com/watch?v=${dup.videoId}" target="_blank" style="color: var(--text-main);">${dup.titulo}</a>
-                  <br><small style="color: var(--text-muted);">${dup.canal} - ${formatLocalDateTime(dup.dataPublicacao)}</small>
-                </div>
-              `).join('')}
-            </div>
+            <div class="drawer-content"></div>
           ` : ''}
         </div>
       `;
+
+      // Preenche a gaveta do modo consolidado com cards completos
+      if (duplicates.length > 0) {
+        const drawerContent = card.querySelector('.drawer-content');
+        duplicates.forEach(dupItem => {
+          drawerContent.appendChild(createCardElement(dupItem, []));
+        });
+      }
+
       return card;
     }
 
@@ -475,19 +699,49 @@
     }
 
     /* ==========================================================================
-       8. CONTROLES DE NAVEGAÇÃO E EVENTOS
+       9. NAVEGAÇÃO E ATUALIZAÇÃO DINÂMICA
        ========================================================================== */
     function populateYearSelector() {
       const yearSelect = document.getElementById('yearSelect');
       yearSelect.innerHTML = '<option value="">Ano</option>';
 
-      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))].sort();
+      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))]
+        .filter(y => !isNaN(y))
+        .sort((a, b) => a - b);
+
       years.forEach(year => {
         const opt = document.createElement('option');
         opt.value = year;
         opt.textContent = year;
         yearSelect.appendChild(opt);
       });
+    }
+
+    function toggleDateNavControls(enable) {
+      const container = document.getElementById('navTimeContainer');
+      const elements = container.querySelectorAll('select, button');
+      elements.forEach(el => el.disabled = !enable);
+    }
+
+    function setupScrollObserver() {
+      if (observer) observer.disconnect();
+
+      const cards = document.querySelectorAll('.card');
+      if (cards.length === 0) return;
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            if (card.dataset.year && card.dataset.month) {
+              document.getElementById('yearSelect').value = card.dataset.year;
+              document.getElementById('monthSelect').value = card.dataset.month;
+            }
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+      cards.forEach(card => observer.observe(card));
     }
 
     function scrollToSelectedDate() {
@@ -506,17 +760,80 @@
       }
     }
 
-    function updateSortBtnText() {
-      document.getElementById('sortOrderBtn').textContent = 
-        `Ordem: ${state.sortAscending ? 'Ascendente (Antigos)' : 'Descendente (Novos)'}`;
+    function navigateSelect(selectId, direction) {
+      const select = document.getElementById(selectId);
+      const options = Array.from(select.options);
+      let currentIndex = select.selectedIndex;
+
+      let nextIndex = currentIndex + direction;
+      if (nextIndex >= 0 && nextIndex < options.length) {
+        select.selectedIndex = nextIndex;
+        scrollToSelectedDate();
+      }
     }
 
-    // Inicialização da Aplicação
+    function updateSortBtnText() {
+      document.getElementById('sortOrderBtn').textContent = state.sortAscending ? 'Asc ▲' : 'Desc ▼';
+    }
+
+    /* ==========================================================================
+       10. MODAL DE CANAIS
+       ========================================================================== */
+    function populateChannelsModal() {
+      const container = document.getElementById('channelsListContainer');
+      container.innerHTML = '';
+
+      const channels = [...new Set(videoDatabase.map(v => v.canal))].filter(Boolean).sort();
+
+      channels.forEach(channel => {
+        const label = document.createElement('label');
+        label.className = 'channel-checkbox-item';
+        const isChecked = !state.hiddenChannels.includes(channel);
+
+        label.innerHTML = `
+          <input type="checkbox" value="${channel}" ${isChecked ? 'checked' : ''}>
+          <span>${channel}</span>
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function openChannelsModal() {
+      populateChannelsModal();
+      document.getElementById('channelsModal').classList.add('open');
+    }
+
+    function closeChannelsModal() {
+      document.getElementById('channelsModal').classList.remove('open');
+    }
+
+    function applyChannelsFilter() {
+      const checkboxes = document.querySelectorAll('#channelsListContainer input[type="checkbox"]');
+      const hidden = [];
+
+      checkboxes.forEach(cb => {
+        if (!cb.checked) {
+          hidden.push(cb.value);
+        }
+      });
+
+      state.hiddenChannels = hidden;
+      saveState();
+      renderList();
+      closeChannelsModal();
+    }
+
+    /* ==========================================================================
+       11. INICIALIZAÇÃO DE EVENTOS
+       ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
       loadState();
-      loadDatabase(); // Busca o JSON e renderiza a lista
+      adjustBodyPadding();
+      window.addEventListener('resize', adjustBodyPadding);
 
-      // Evento de Busca com Debounce
+      loadDatabase();
+
+      // Busca Instantânea com Debounce
       document.getElementById('searchInput').addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
@@ -526,14 +843,19 @@
         }, CONFIG.DEBOUNCE_DELAY_MS);
       });
 
-      // Modo de Visualização
+      // Modos de Visualização e Ordenação
       document.getElementById('viewModeSelect').addEventListener('change', (e) => {
         state.viewMode = e.target.value;
         saveState();
         renderList();
       });
 
-      // Inverter Ordem
+      document.getElementById('sortBySelect').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        saveState();
+        renderList();
+      });
+
       document.getElementById('sortOrderBtn').addEventListener('click', () => {
         state.sortAscending = !state.sortAscending;
         updateSortBtnText();
@@ -541,11 +863,30 @@
         renderList();
       });
 
-      // Navegação por Seletores de Data
+      // Navegação Ano e Mês
       document.getElementById('yearSelect').addEventListener('change', scrollToSelectedDate);
       document.getElementById('monthSelect').addEventListener('change', scrollToSelectedDate);
 
-      // Salvar posição de scroll
+      // Setas de Navegação Individuais
+      document.getElementById('yearUpBtn').addEventListener('click', () => navigateSelect('yearSelect', -1));
+      document.getElementById('yearDownBtn').addEventListener('click', () => navigateSelect('yearSelect', 1));
+      document.getElementById('monthUpBtn').addEventListener('click', () => navigateSelect('monthSelect', -1));
+      document.getElementById('monthDownBtn').addEventListener('click', () => navigateSelect('monthSelect', 1));
+
+      // Eventos do Modal de Canais
+      document.getElementById('channelsModalBtn').addEventListener('click', openChannelsModal);
+      document.getElementById('closeModalBtn').addEventListener('click', closeChannelsModal);
+      document.getElementById('applyChannelsBtn').addEventListener('click', applyChannelsFilter);
+
+      document.getElementById('selectAllChannelsBtn').addEventListener('click', () => {
+        document.querySelectorAll('#channelsListContainer input[type="checkbox"]').forEach(cb => cb.checked = true);
+      });
+
+      document.getElementById('deselectAllChannelsBtn').addEventListener('click', () => {
+        document.querySelectorAll('#channelsListContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+      });
+
+      // Salva scroll na rolagem
       window.addEventListener('scroll', saveState);
     });
   </script>
