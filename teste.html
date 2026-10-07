@@ -246,7 +246,7 @@
   <main class="container" id="videoListContainer"></main>
 
   <!-- SCRIPT BASE E LÓGICA -->
-  <script src="database.js"></script>
+  <script src="database.json"></script>
   <script>
     /* ==========================================================================
        4. VARIÁVEIS DE CONFIGURAÇÃO & ESTADO GLOBAL
@@ -314,7 +314,7 @@
       container.innerHTML = '';
 
       if (typeof videoDatabase === 'undefined' || !Array.isArray(videoDatabase)) {
-        container.innerHTML = '<p style="color:red;">Base de dados "database.js" não encontrada!</p>';
+        container.innerHTML = '<p style="color:red;">Base de dados "database.json" não encontrada!</p>';
         return;
       }
 
