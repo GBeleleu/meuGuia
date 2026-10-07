@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudo de Vídeos - JAMstack</title>
+  <title>[meuGuia] Marcelo Marins</title>
   <style>
     /* ==========================================================================
        1. REGRAS DE OURO & VARIÁVEIS DE TEMA (Tema Escuro)
@@ -15,7 +15,7 @@
       --bg-drawer: #1a1a1a;
       --text-main: #e0e0e0;
       --text-muted: #aaaaaa;
-      --accent-color: #bb86fc;
+      --accent-color: #66b3ab;
       --border-color: #333333;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -343,15 +343,15 @@
       
       <!-- Busca Instantânea sem Vogais/Flexível -->
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar título (ex: OBSIDIANA)...">
+        <input type="text" id="searchInput" placeholder="Buscar por título...">
       </div>
 
       <!-- Modos de Visualização & Ordenamento -->
       <div class="filter-group">
         <select id="viewModeSelect">
-          <option value="consolidado">Consolidado (Apenas Masters)</option>
-          <option value="sequenciado">Sequenciado (Cronológico)</option>
-          <option value="sequenciado-canais">Sequenciado (Blocos por Canal)</option>
+          <option value="consolidado">Consolidado (Agrupado por conteúdo)</option>
+          <option value="sequenciado">Sequenciado (Canais mesclados)</option>
+          <option value="sequenciado-canais">Sequenciado (Canais separados)</option>
         </select>
 
         <select id="sortBySelect">
@@ -361,7 +361,7 @@
         </select>
 
         <button id="sortOrderBtn" title="Inverter Ordem">Asc ▲</button>
-        <button id="channelsModalBtn">Filtro Canais</button>
+        <button id="channelsModalBtn">Filtro</button>
       </div>
 
       <!-- Navegação Auxiliar de Rolagem (Ano e Mês com Setas Individuais) -->
