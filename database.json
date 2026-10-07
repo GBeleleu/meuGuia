@@ -235,9 +235,9 @@
     "dataPublicacao": "2017-04-17T08:55:15Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "7V87AazHwnk",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "jww4aqScaDU",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "Gc2t9ndUq0A",
@@ -379,9 +379,9 @@
     "dataPublicacao": "2017-05-20T23:09:40Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "c4rqQxwtHis",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "jww4aqScaDU",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "GCRPluUV9PU",
@@ -427,9 +427,9 @@
     "dataPublicacao": "2017-06-06T21:58:52Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "NmWhz4R7ZMM",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "fjLSRbvZufo",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "bnQ8fUTNMrE",
@@ -475,9 +475,9 @@
     "dataPublicacao": "2017-06-18T23:38:49Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "MCawY4-0jok",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "icZGEhYGsiY",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "zdO9_VsFdHs",
@@ -487,9 +487,9 @@
     "dataPublicacao": "2017-06-19T04:03:01Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "zdO9_VsFdHs",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "icZGEhYGsiY",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "bwFfnFsXn-8",
@@ -1075,9 +1075,9 @@
     "dataPublicacao": "2017-09-22T01:29:49Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "JNSy2wXihI8",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "tkA6jkRfZA8",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "NVGuzaGpht0",
@@ -1279,9 +1279,9 @@
     "dataPublicacao": "2017-09-23T20:04:38Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "6KaqaOMWGMo",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "jww4aqScaDU",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "amegvuAm-d0",
@@ -1291,9 +1291,9 @@
     "dataPublicacao": "2017-09-23T20:04:55Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "amegvuAm-d0",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "icZGEhYGsiY",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "BJbabj37HCA",
@@ -1351,9 +1351,9 @@
     "dataPublicacao": "2017-09-24T00:52:41Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "LvFiF--H6LE",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "fjLSRbvZufo",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "zp20qGo5H8E",
@@ -11119,9 +11119,9 @@
     "dataPublicacao": "2019-11-24T02:37:53Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gi8i0wlU4wA",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata - Duração Diferente (100%)"
+    "masterId": "0w8VS2f9L8c",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "l0wsaIfRLPQ",
@@ -11131,9 +11131,9 @@
     "dataPublicacao": "2019-11-24T02:45:45Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gi8i0wlU4wA",
+    "masterId": "0w8VS2f9L8c",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata - Duração Diferente (100%)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "Py39A1MThXE",
@@ -12727,9 +12727,9 @@
     "dataPublicacao": "2020-03-04T02:46:47Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "GyuHgBy4D_k",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "KIKQSCG35Uc",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "P_sLA--f6R8",
@@ -12979,9 +12979,9 @@
     "dataPublicacao": "2020-03-26T02:05:04Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "6SmkK694VQw",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "ttGVv0ItZtM",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "GZDo33OUFjI",
@@ -12991,9 +12991,9 @@
     "dataPublicacao": "2020-03-26T02:27:03Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "6SmkK694VQw",
+    "masterId": "ttGVv0ItZtM",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "2cxfbAIhqq4",
@@ -13147,9 +13147,9 @@
     "dataPublicacao": "2020-04-07T23:08:29Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "u8Nm1uEgdtY",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (83%) (Critério B)"
+    "masterId": "j3gqgr7DJw8",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "r9yqX09EETk",
@@ -13159,9 +13159,9 @@
     "dataPublicacao": "2020-04-07T23:11:47Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "u8Nm1uEgdtY",
+    "masterId": "j3gqgr7DJw8",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (83%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "rR7mV778Y8E",
@@ -13219,9 +13219,9 @@
     "dataPublicacao": "2020-04-09T06:31:54Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "u8Nm1uEgdtY",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (83%) (Critério B)"
+    "masterId": "1ZjdTSls2NU",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "LG3ip1_jUG8",
@@ -13231,9 +13231,9 @@
     "dataPublicacao": "2020-04-09T06:39:25Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "u8Nm1uEgdtY",
+    "masterId": "1ZjdTSls2NU",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (83%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "eaxHcKwmVNk",
@@ -13339,9 +13339,9 @@
     "dataPublicacao": "2020-04-11T23:43:45Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gi8i0wlU4wA",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (64%) (Critério B)"
+    "masterId": "Oa2gvkL3p8U",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "DUY9Ot8Mb2U",
@@ -13351,9 +13351,9 @@
     "dataPublicacao": "2020-04-11T23:50:45Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gi8i0wlU4wA",
+    "masterId": "Oa2gvkL3p8U",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (64%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "rdiltk0Tuv4",
@@ -17635,9 +17635,9 @@
     "dataPublicacao": "2021-02-07T23:37:44Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "hsz3ov0LmPs",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (100%) (Critério C)"
+    "masterId": "gmPAKLywCww",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "ESegqVTTPMg",
@@ -18211,9 +18211,9 @@
     "dataPublicacao": "2021-03-12T03:08:06Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "xjZG2_02yyM",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "masterId": "5VvKkYLiaJY",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "t-2BQWBkOFw",
@@ -18223,9 +18223,9 @@
     "dataPublicacao": "2021-03-12T03:53:02Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "xjZG2_02yyM",
+    "masterId": "5VvKkYLiaJY",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "5TO1-kROz74",
@@ -18259,9 +18259,9 @@
     "dataPublicacao": "2021-03-12T20:42:27Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "xjZG2_02yyM",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "masterId": "JtkX2iK335U",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "dEqP6Brqwe0",
@@ -18271,9 +18271,9 @@
     "dataPublicacao": "2021-03-12T21:12:29Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "xjZG2_02yyM",
+    "masterId": "JtkX2iK335U",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "oZ8YUEpK0AY",
@@ -19147,9 +19147,9 @@
     "dataPublicacao": "2021-04-28T00:59:59Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "Kch-HMCzBjw",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "CrZL4BbajlU",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "rrLhDIsGpSg",
@@ -19159,9 +19159,9 @@
     "dataPublicacao": "2021-04-28T01:59:10Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "rrLhDIsGpSg",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "CrZL4BbajlU",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "83WZxDI-qjM",
@@ -19327,9 +19327,9 @@
     "dataPublicacao": "2021-05-04T17:17:20Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "NXYT_HqM33c",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "SVY2kUI0M9A",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "XzJaJjxracg",
@@ -19339,9 +19339,9 @@
     "dataPublicacao": "2021-05-04T17:20:24Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "NXYT_HqM33c",
+    "masterId": "SVY2kUI0M9A",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "WKJKIxAxuzM",
@@ -22519,9 +22519,9 @@
     "dataPublicacao": "2021-11-20T14:45:28Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "PkbtV_83V2M",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "SVY2kUI0M9A",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "fVqgbmWrXRg",
@@ -22531,9 +22531,9 @@
     "dataPublicacao": "2021-11-20T14:59:21Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "PkbtV_83V2M",
+    "masterId": "SVY2kUI0M9A",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "h5FV2beVDZw",
@@ -22795,9 +22795,9 @@
     "dataPublicacao": "2021-11-28T20:06:22Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "hsz3ov0LmPs",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (75%) (Critério C)"
+    "masterId": "lYUciifCsG8",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "LNuQiJI7_GQ",
@@ -22843,9 +22843,9 @@
     "dataPublicacao": "2021-12-02T17:57:52Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gYD0CndjkGg",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "ykmyIlKSpjI",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "_CBPXac0_gs",
@@ -22855,9 +22855,9 @@
     "dataPublicacao": "2021-12-02T17:59:16Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gYD0CndjkGg",
+    "masterId": "ykmyIlKSpjI",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "LLjEruJfWus",
@@ -22879,9 +22879,9 @@
     "dataPublicacao": "2021-12-04T18:04:35Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KRO1dlxqSfs",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "sgoVS_3TRCs",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "s7MU-nm8P4U",
@@ -22891,9 +22891,9 @@
     "dataPublicacao": "2021-12-04T18:05:23Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KRO1dlxqSfs",
+    "masterId": "sgoVS_3TRCs",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "uavfXvHsaHE",
@@ -23131,9 +23131,9 @@
     "dataPublicacao": "2021-12-16T14:26:21Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "bRHeJUYHj6I",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "WATt7PvQrV8",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "KlPVIqdw7oY",
@@ -23143,9 +23143,9 @@
     "dataPublicacao": "2021-12-16T14:30:19Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KlPVIqdw7oY",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "zMbfIcbatBI",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "bvoCb6vlnno",
@@ -23191,9 +23191,9 @@
     "dataPublicacao": "2021-12-19T04:22:21Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "toJaiL2TRG8",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "P5uKIpWPDmE",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "oeEMH9OymrA",
@@ -23203,9 +23203,9 @@
     "dataPublicacao": "2021-12-19T04:23:50Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "toJaiL2TRG8",
+    "masterId": "P5uKIpWPDmE",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "aup-S0j6fuI",
@@ -24259,9 +24259,9 @@
     "dataPublicacao": "2022-03-29T02:10:08Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "Wdg7-S4vA40",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (83%) (Critério B)"
+    "masterId": "sqjYaWP2ki8",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "H6oA2mqMnXA",
@@ -25855,9 +25855,9 @@
     "dataPublicacao": "2022-10-10T14:56:04Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "2iR3BNGp3gQ",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "ttGVv0ItZtM",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "SVXqcfRfhjo",
@@ -25867,9 +25867,9 @@
     "dataPublicacao": "2022-10-12T15:07:24Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "PkbtV_83V2M",
+    "masterId": "SVY2kUI0M9A",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (82%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "agh5U_Xn24k",
@@ -25999,9 +25999,9 @@
     "dataPublicacao": "2022-10-24T17:44:06Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gYD0CndjkGg",
+    "masterId": "ykmyIlKSpjI",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "Yee51zytAVs",
@@ -26011,9 +26011,9 @@
     "dataPublicacao": "2022-10-26T16:22:53Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KRO1dlxqSfs",
+    "masterId": "sgoVS_3TRCs",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (80%) (Critério C)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "FBUlC_5M9r4",
@@ -26107,9 +26107,9 @@
     "dataPublicacao": "2022-11-05T16:21:26Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KlPVIqdw7oY",
+    "masterId": "zMbfIcbatBI",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (79%) (Critério C)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "9oRnPLZKP4Y",
@@ -26119,9 +26119,9 @@
     "dataPublicacao": "2022-11-07T22:45:57Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "toJaiL2TRG8",
+    "masterId": "P5uKIpWPDmE",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (79%) (Critério C)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "mG93LdsgoOQ",
@@ -26203,9 +26203,9 @@
     "dataPublicacao": "2022-11-17T15:40:40Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "kiFAbg2jxBM",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "xUgZ0_KyqI8",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "fC_dhsTPugs",
@@ -26227,9 +26227,9 @@
     "dataPublicacao": "2022-11-19T21:39:23Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "ghjpAYX0uhE",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "xPv8CF-7HIc",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "2GE2zv231l0",
@@ -26263,9 +26263,9 @@
     "dataPublicacao": "2022-11-25T17:32:45Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "kYWsqOR0460",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "sqjYaWP2ki8",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "8WIFT0zK_JQ",
@@ -26287,9 +26287,9 @@
     "dataPublicacao": "2022-11-28T19:07:17Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "hsz3ov0LmPs",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (80%) (Critério C)"
+    "masterId": "k0Z0U38Xxmg",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "bDlAGyILP3g",
@@ -26419,9 +26419,9 @@
     "dataPublicacao": "2022-12-10T13:52:42Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "HlCNVD5e1sI",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (77%) (Critério B)"
+    "masterId": "1S-wTbmol-0",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "Ok_f_cdNwd8",
@@ -26875,9 +26875,9 @@
     "dataPublicacao": "2023-04-12T14:08:09Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "eFaxXm2fnaU",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "masterId": "AMSx-Nmbjdg",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "2UicmvwBl7g",
@@ -26983,9 +26983,9 @@
     "dataPublicacao": "2023-05-09T23:20:34Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "sFdw7iPi6c8",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (60%) (Critério B)"
+    "masterId": "TTG_mjq-eF4",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "K39uZ2unaY8",
@@ -27139,9 +27139,9 @@
     "dataPublicacao": "2023-06-17T02:26:44Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "FkMx00n9xuA",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "tkA6jkRfZA8",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "iP-aLMHgoKQ",
@@ -27199,9 +27199,9 @@
     "dataPublicacao": "2023-06-25T16:45:11Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "c6--f7iPGS8",
-    "isMaster": true,
-    "tipoMaster": "Master Original"
+    "masterId": "ttGVv0ItZtM",
+    "isMaster": false,
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "XESP3uR1y_s",
@@ -27223,9 +27223,9 @@
     "dataPublicacao": "2023-06-27T21:59:44Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "PkbtV_83V2M",
+    "masterId": "SVY2kUI0M9A",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (82%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "59tM8lAELj8",
@@ -27391,9 +27391,9 @@
     "dataPublicacao": "2023-07-24T02:18:00Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "gYD0CndjkGg",
+    "masterId": "ykmyIlKSpjI",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (80%) (Critério B)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "yPW-Jq4S_Ek",
@@ -27487,9 +27487,9 @@
     "dataPublicacao": "2023-08-16T00:19:59Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "KRO1dlxqSfs",
+    "masterId": "sgoVS_3TRCs",
     "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (80%) (Critério C)"
+    "tipoMaster": "Duplicado (Forçado Manualmente)"
   },
   {
     "videoId": "fRg8Z6eODbk",
@@ -27619,9 +27619,9 @@
     "dataPublicacao": "2023-09-03T21:56:52Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "xo_fZOQg8pU",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "masterId": "13GXcqzk_1g",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "YJYQpNQ5Ec8",
@@ -27775,9 +27775,9 @@
     "dataPublicacao": "2023-10-24T13:08:10Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "WRbAndncxgA",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (56%) (Critério B)"
+    "masterId": "5UptBv7FT1E",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "O7vQ7D3Wdrs",
@@ -27799,9 +27799,9 @@
     "dataPublicacao": "2023-10-27T13:50:13Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "fxzdUzf45L4",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (78%) (Critério B)"
+    "masterId": "nDHzWVa0lYc",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "PZ8BS4OJuo4",
@@ -27811,9 +27811,9 @@
     "dataPublicacao": "2023-10-29T19:15:20Z",
     "eLive": false,
     "privacyStatus": "public",
-    "masterId": "dH3ot6xErcQ",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (78%) (Critério B)"
+    "masterId": "PZ8BS4OJuo4",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "sOjCP0kc5sE",
@@ -27895,9 +27895,9 @@
     "dataPublicacao": "2023-11-10T01:57:59Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "w70IoGSem-s",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (14%) (Critério B)"
+    "masterId": "aWjQsUmhOso",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "gNNTB0R71TM",
@@ -29563,9 +29563,9 @@
     "dataPublicacao": "2025-01-25T00:14:54Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "w70IoGSem-s",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Reenvio/Subtítulo (33%) (Critério B)"
+    "masterId": "LR4YwKKdUHA",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "2pfpkgpRfFo",
@@ -31423,9 +31423,9 @@
     "dataPublicacao": "2026-05-01T00:54:14Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "2sosDNlux-g",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Cópia Exata (Critério A)"
+    "masterId": "GNHf7YafNxM",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "VxQvz9Tb4HQ",
@@ -31459,9 +31459,9 @@
     "dataPublicacao": "2026-05-15T21:16:05Z",
     "eLive": true,
     "privacyStatus": "public",
-    "masterId": "knRDlkqpH9A",
-    "isMaster": false,
-    "tipoMaster": "Duplicado - Similar Fuzzy (75%) (Critério C)"
+    "masterId": "jH0JDXXeA3w",
+    "isMaster": true,
+    "tipoMaster": "Master Original (Forçado Manualmente)"
   },
   {
     "videoId": "DMnxqzXsdpQ",
