@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudo de Vídeos - JAMstack</title>
+  <style>
+    /* ==========================================================================
+       1. REGRAS DE OURO & VARIÁVEIS DE TEMA (Tema Escuro)
+       ========================================================================== */
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-card: #252525;
+      --bg-drawer: #1a1a1a;
+      --text-main: #e0e0e0;
+      --text-muted: #aaaaaa;
+      --accent-color: #bb86fc;
+      --border-color: #333333;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      padding-top: 140px; /* Será ajustado dinamicamente via JS */
+      min-height: 100vh;
+    }
+
+    /* ==========================================================================
+       2. BARRA FIXA SUPERIOR DE CONTROLE & NAVEGAÇÃO
+       ========================================================================== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .controls-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .search-wrapper input {
+      width: 100%;
+      padding: 10px 36px 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      padding: 4px 8px;
+    }
+
+    .clear-btn:hover {
+      color: var(--text-main);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    select, button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:hover, select:hover {
+      border-color: var(--accent-color);
+    }
+
+    select:disabled, button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: var(--border-color);
+    }
+
+    .nav-time-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .nav-subgroup {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .arrow-btn {
+      padding: 2px 5px;
+      font-size: 11px;
+      background: transparent;
+      border: none;
+    }
+
+    /* ==========================================================================
+       3. MODAL DE CANAIS
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .channel-list {
+      overflow-y: auto;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .channel-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    /* ==========================================================================
+       4. LISTAGEM DE CARDS VERTICAIS & ESTRUTURA DOS CARDS
+       ========================================================================== */
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    /* Bloco da Thumbnail + Barra Inferior */
+    .card-media-block {
+      width: 160px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 4. Faixa mais escura sob a thumbnail para Duração e ID */
+    .thumb-footer-bar {
+      background-color: #111111;
+      padding: 4px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    .duration-tag {
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .videoid-tag {
+      font-family: monospace;
+      font-size: 9px;
+      color: #555555; /* ID ainda mais discreto */
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-decoration: none;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    .card-title:hover {
+      text-decoration: underline;
+    }
+
+    /* 3. Canal abaixo do título, Publicado quebrando linha */
+    .card-channel {
+      font-size: 13px;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .status-removed {
+      color: #ff5555;
+      font-weight: bold;
+      margin-left: 6px;
+      font-size: 12px;
+    }
+
+    /* 5. Indicador de Ocorrências no canto inferior direito (+N) */
+    .drawer-toggle-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: var(--bg-primary);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .drawer-toggle-badge:hover {
+      background: var(--accent-color);
+      color: var(--bg-primary);
+    }
+
+    .drawer-content {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border-color);
+      display: none;
+      width: 100%;
+    }
+
+    .drawer-content.open {
+      display: block;
+    }
+
+    .drawer-item {
+      margin-bottom: 12px;
+    }
+
+    .drawer-item .card {
+      margin-bottom: 8px;
+      background-color: var(--bg-drawer);
+    }
+
+    .channel-group-header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin: 24px 0 12px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ==========================================================================
+       5. AJUSTES RESPONSIVOS (CELULAR)
+       ========================================================================== */
+    @media (max-width: 600px) {
+      .card {
+        flex-direction: row; /* Mantém lado a lado de forma compacta */
+        gap: 10px;
+        padding: 10px;
+      }
+
+      /* 1. Ajuste da Thumbnail no celular */
+      .card-media-block {
+        width: 110px;
+      }
+
+      .card-thumb {
+        height: 62px;
+      }
+
+      .card-title {
+        font-size: 14px;
+      }
+
+      .card-channel {
+        font-size: 11px;
+      }
+
+      .card-date {
+        font-size: 10px;
+      }
+
+      .drawer-toggle-badge {
+        bottom: 8px;
+        right: 8px;
+        font-size: 11px;
+        padding: 2px 7px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA FIXA SUPERIOR -->
+  <header class="top-bar" id="topBar">
+    <div class="controls-container">
+      
+      <!-- Busca Instantânea -->
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Buscar por título...">
+        <!-- Botão para limpar a busca -->
+        <button class="clear-btn" id="clearSearchBtn" title="Limpar busca">✕</button>
+      </div>
+
+      <!-- Modos de Visualização & Ordenamento -->
+      <div class="filter-group">
+        <select id="viewModeSelect">
+          <option value="consolidado">Consolidado (Apenas Masters)</option>
+          <option value="sequenciado">Sequenciado (Cronológico)</option>
+          <option value="sequenciado_canal">Sequenciado (Agrupado por Canal)</option>
+        </select>
+
+        <select id="sortBySelect">
+          <option value="data">Data</option>
+          <option value="titulo">Título</option>
+          <option value="duracao">Duração</option>
+        </select>
+
+        <button id="sortOrderBtn" title="Inverter Ordem">Ordem: Asc (Antigos)</button>
+        <button id="openChannelModalBtn">Canais</button>
+      </div>
+
+      <!-- Navegação Auxiliar de Rolagem (Ano e Mês) -->
+      <div class="nav-time-group" id="navTimeGroup">
+        <div class="nav-subgroup">
+          <button class="arrow-btn" id="yearUpBtn">▲</button>
+          <select id="yearSelect"><option value="">Ano</option></select>
+          <button class="arrow-btn" id="yearDownBtn">▼</button>
+        </div>
+        <div class="nav-subgroup">
+          <button class="arrow-btn" id="monthUpBtn">▲</button>
+          <select id="monthSelect">
+            <option value="">Mês</option>
+            <option value="0">Jan</option><option value="1">Fev</option>
+            <option value="2">Mar</option><option value="3">Abr</option>
+            <option value="4">Mai</option><option value="5">Jun</option>
+            <option value="6">Jul</option><option value="7">Ago</option>
+            <option value="8">Set</option><option value="9">Out</option>
+            <option value="10">Nov</option><option value="11">Dez</option>
+          </select>
+          <button class="arrow-btn" id="monthDownBtn">▼</button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MODAL DE CANAIS -->
+  <div class="modal-backdrop" id="channelModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Filtrar por Canais</h3>
+        <div>
+          <button id="selectAllChannelsBtn">Todos</button>
+          <button id="deselectAllChannelsBtn">Nenhum</button>
+        </div>
+      </div>
+      <div class="channel-list" id="channelListContainer"></div>
+      <div style="text-align: right;">
+        <button id="closeChannelModalBtn">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTAGEM DE CARDS VERTICAIS -->
+  <main class="container" id="videoListContainer">
+    <p style="text-align: center; color: var(--text-muted);">Carregando vídeos...</p>
+  </main>
+
+  <script>
+    /* ==========================================================================
+       CONFIGURAÇÕES E ESTADO GLOBAL
+       ========================================================================== */
+    const CONFIG = {
+      DEBOUNCE_DELAY_MS: 300,
+      LOCALSTORAGE_KEY: 'app_video_list_state_v2'
+    };
+
+    let videoDatabase = [];
+
+    let state = {
+      searchQuery: '',
+      viewMode: 'consolidado',
+      sortBy: 'data',
+      sortAscending: true,
+      hiddenChannels: [],
+      scrollY: 0
+    };
+
+    let debounceTimer = null;
+    let observer = null;
+
+    /* ==========================================================================
+       FUNÇÕES AUXILIARES
+       ========================================================================== */
+
+    // Normalização mantendo a vogal 'A', mas eliminando E, I, O, U, acentos e caracteres especiais
+    function normalizeText(str) {
+      if (!str) return '';
+      return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[eiou]/g, '') // Remove E, I, O, U (mantém A)
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    function formatLocalDateTime(isoDateStr) {
+      if (!isoDateStr) return '';
+      const date = new Date(isoDateStr);
+      return date.toLocaleString();
+    }
+
+    // Formatação de segundos no padrão HH:MM:SS ou MM:SS
+    function formatDuration(seconds) {
+      if (!seconds || isNaN(seconds)) return '0:00';
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = Math.floor(seconds % 60);
+
+      const sStr = s < 10 ? `0${s}` : `${s}`;
+      if (h > 0) {
+        const mStr = m < 10 ? `0${m}` : `${m}`;
+        return `${h}:${mStr}:${sStr}`;
+      }
+      return `${m}:${sStr}`;
+    }
+
+    function adjustBodyPadding() {
+      const topBarHeight = document.getElementById('topBar').offsetHeight;
+      document.body.style.paddingTop = `${topBarHeight + 15}px`;
+    }
+
+    /* ==========================================================================
+       PERSISTÊNCIA DE ESTADO (LocalStorage)
+       ========================================================================== */
+    function saveState() {
+      state.scrollY = window.scrollY;
+      localStorage.setItem(CONFIG.LOCALSTORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(CONFIG.LOCALSTORAGE_KEY);
+      if (saved) {
+        state = { ...state, ...JSON.parse(saved) };
+        const searchInput = document.getElementById('searchInput');
+        searchInput.value = state.searchQuery || '';
+        toggleClearSearchBtn();
+        document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
+        document.getElementById('sortBySelect').value = state.sortBy || 'data';
+        updateSortBtnText();
+      }
+    }
+
+    function toggleClearSearchBtn() {
+      const searchInput = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      clearBtn.style.display = searchInput.value ? 'block' : 'none';
+    }
+
+    /* ==========================================================================
+       CARREGAMENTO DE DADOS
+       ========================================================================== */
+    async function loadDatabase() {
+      try {
+        const response = await fetch('database.json');
+        if (!response.ok) throw new Error('Falha ao carregar o arquivo database.json');
+        videoDatabase = await response.json();
+        
+        populateChannelModal();
+        populateYearSelector();
+        renderList();
+
+        if (state.scrollY) window.scrollTo(0, state.scrollY);
+      } catch (err) {
+        document.getElementById('videoListContainer').innerHTML = 
+          `<p style="color:#ff5555; text-align:center;">Erro: ${err.message}<br>Verifique se o arquivo database.json está no mesmo diretório.</p>`;
+      }
+    }
+
+    /* ==========================================================================
+       PROCESSAMENTO E RENDERIZAÇÃO
+       ========================================================================== */
+    function sortItems(items) {
+      return items.sort((a, b) => {
+        let res = 0;
+        if (state.sortBy === 'data') {
+          res = new Date(a.dataPublicacao) - new Date(b.dataPublicacao);
+        } else if (state.sortBy === 'titulo') {
+          res = a.titulo.localeCompare(b.titulo);
+        } else if (state.sortBy === 'duracao') {
+          res = (a.duracaoSegundos || 0) - (b.duracaoSegundos || 0);
+        }
+        return state.sortAscending ? res : -res;
+      });
+    }
+
+    function renderList() {
+      const container = document.getElementById('videoListContainer');
+      container.innerHTML = '';
+
+      if (!videoDatabase.length) return;
+
+      // Habilita/Desabilita seletores de data dependendo da ordenação
+      const isDateSort = state.sortBy === 'data';
+      document.querySelectorAll('#navTimeGroup select, #navTimeGroup button').forEach(el => {
+        el.disabled = !isDateSort;
+      });
+
+      // 1. Filtros (Busca + Canais)
+      const normalizedQuery = normalizeText(state.searchQuery);
+      let items = videoDatabase.filter(item => {
+        const matchesQuery = normalizeText(item.titulo).includes(normalizedQuery);
+        const isChannelVisible = !state.hiddenChannels.includes(item.canal);
+        return matchesQuery && isChannelVisible;
+      });
+
+      // 2. Ordenação Principal
+      items = sortItems(items);
+
+      // 3. Modos de Visualização
+      if (state.viewMode === 'consolidado') {
+        const masterMap = new Map();
+        const duplicatesMap = new Map();
+
+        items.forEach(item => {
+          if (item.isMaster) {
+            masterMap.set(item.videoId, item);
+          } else {
+            if (!duplicatesMap.has(item.masterId)) {
+              duplicatesMap.set(item.masterId, []);
+            }
+            duplicatesMap.get(item.masterId).push(item);
+          }
+        });
+
+        masterMap.forEach(masterItem => {
+          let duplicates = duplicatesMap.get(masterItem.videoId) || [];
+          
+          // Ordena as ocorrências da gaveta cronologicamente
+          duplicates.sort((a, b) => {
+            const dateA = new Date(a.dataPublicacao);
+            const dateB = new Date(b.dataPublicacao);
+            return state.sortAscending ? dateA - dateB : dateB - dateA;
+          });
+
+          container.appendChild(createCardElement(masterItem, duplicates));
+        });
+
+      } else if (state.viewMode === 'sequenciado_canal') {
+        const channelGroups = new Map();
+        items.forEach(item => {
+          if (!channelGroups.has(item.canal)) {
+            channelGroups.set(item.canal, []);
+          }
+          channelGroups.get(item.canal).push(item);
+        });
+
+        channelGroups.forEach((channelItems, channelName) => {
+          const groupHeader = document.createElement('div');
+          groupHeader.className = 'channel-group-header';
+          groupHeader.textContent = channelName;
+          container.appendChild(groupHeader);
+
+          channelItems.forEach(item => {
+            container.appendChild(createCardElement(item));
+          });
+        });
+
+      } else {
+        // Sequenciado simples
+        items.forEach(item => {
+          container.appendChild(createCardElement(item));
+        });
+      }
+
+      setupIntersectionObserver();
+      adjustBodyPadding();
+    }
+
+    // Criação dos Cards de Vídeo
+    function createCardElement(item, duplicates = []) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.year = new Date(item.dataPublicacao).getFullYear();
+      card.dataset.month = new Date(item.dataPublicacao).getMonth();
+
+      const thumbUrl = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
+      const videoUrl = `https://www.youtube.com/watch?v=${item.videoId}`;
+
+      const privacyNotice = item.privacyStatus === 'removed' 
+        ? `<span class="status-removed">(Removido)</span>` 
+        : '';
+
+      card.innerHTML = `
+        <div class="card-media-block">
+          <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail" loading="lazy">
+          <div class="thumb-footer-bar">
+            <span class="videoid-tag">${item.videoId}</span>
+            <span class="duration-tag">${formatDuration(item.duracaoSegundos)}</span>
+          </div>
+        </div>
+        <div class="card-content">
+          <div>
+            <a href="${videoUrl}" target="_blank" class="card-title">${item.titulo}</a>
+            ${privacyNotice}
+          </div>
+          <span class="card-channel">${item.canal}</span>
+          <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}</span>
+
+          ${duplicates.length > 0 ? `
+            <button class="drawer-toggle-badge" onclick="toggleDrawer(this)" title="Ver ocorrências">
+              +${duplicates.length}
+            </button>
+            <div class="drawer-content"></div>
+          ` : ''}
+        </div>
+      `;
+
+      // Preenche a gaveta com cards completos se houver duplicatas
+      if (duplicates.length > 0) {
+        const drawerContent = card.querySelector('.drawer-content');
+        duplicates.forEach(dup => {
+          const drawerItemWrapper = document.createElement('div');
+          drawerItemWrapper.className = 'drawer-item';
+          drawerItemWrapper.appendChild(createCardElement(dup));
+          drawerContent.appendChild(drawerItemWrapper);
+        });
+      }
+
+      return card;
+    }
+
+    function toggleDrawer(btn) {
+      const drawer = btn.nextElementSibling;
+      drawer.classList.toggle('open');
+    }
+
+    /* ==========================================================================
+       MODAL DE CANAIS
+       ========================================================================== */
+    function populateChannelModal() {
+      const container = document.getElementById('channelListContainer');
+      container.innerHTML = '';
+
+      const channels = [...new Set(videoDatabase.map(v => v.canal))].sort();
+
+      channels.forEach(channel => {
+        const label = document.createElement('label');
+        label.className = 'channel-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = channel;
+        checkbox.checked = !state.hiddenChannels.includes(channel);
+
+        checkbox.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            state.hiddenChannels = state.hiddenChannels.filter(c => c !== channel);
+          } else {
+            if (!state.hiddenChannels.includes(channel)) {
+              state.hiddenChannels.push(channel);
+            }
+          }
+          saveState();
+          renderList();
+        });
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(channel));
+        container.appendChild(label);
+      });
+    }
+
+    /* ==========================================================================
+       NAVEGAÇÃO E OBSERVAÇÃO DE ROLAGEM
+       ========================================================================== */
+    function populateYearSelector() {
+      const yearSelect = document.getElementById('yearSelect');
+      yearSelect.innerHTML = '<option value="">Ano</option>';
+
+      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))].sort();
+      years.forEach(year => {
+        const opt = document.createElement('option');
+        opt.value = year;
+        opt.textContent = year;
+        yearSelect.appendChild(opt);
+      });
+    }
+
+    function scrollToSelectedDate() {
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+
+      if (!year && month === '') return;
+
+      const cards = document.querySelectorAll('#videoListContainer > .card');
+      for (let card of cards) {
+        const cardYear = card.dataset.year;
+        const cardMonth = card.dataset.month;
+
+        if ((!year || cardYear === year) && (month === '' || cardMonth === month)) {
+          const topBarHeight = document.getElementById('topBar').offsetHeight;
+          const elementPosition = card.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementPosition - topBarHeight - 10,
+            behavior: 'smooth'
+          });
+          break;
+        }
+      }
+    }
+
+    function navigateYear(delta) {
+      const yearSelect = document.getElementById('yearSelect');
+      const options = Array.from(yearSelect.options).map(o => o.value).filter(v => v !== '');
+      if (!options.length) return;
+
+      let currentIndex = options.indexOf(yearSelect.value);
+      let nextIndex = currentIndex + delta;
+
+      if (nextIndex >= 0 && nextIndex < options.length) {
+        yearSelect.value = options[nextIndex];
+        scrollToSelectedDate();
+      }
+    }
+
+    function navigateMonth(delta) {
+      const monthSelect = document.getElementById('monthSelect');
+      let currentVal = monthSelect.value === '' ? -1 : parseInt(monthSelect.value);
+      let nextVal = currentVal + delta;
+
+      if (nextVal >= 0 && nextVal <= 11) {
+        monthSelect.value = nextVal;
+        scrollToSelectedDate();
+      }
+    }
+
+    function setupIntersectionObserver() {
+      if (observer) observer.disconnect();
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && state.sortBy === 'data') {
+            const year = entry.target.dataset.year;
+            const month = entry.target.dataset.month;
+            if (year && month !== undefined) {
+              document.getElementById('yearSelect').value = year;
+              document.getElementById('monthSelect').value = month;
+            }
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+      document.querySelectorAll('#videoListContainer > .card').forEach(card => {
+        observer.observe(card);
+      });
+    }
+
+    function updateSortBtnText() {
+      document.getElementById('sortOrderBtn').textContent = 
+        `Ordem: ${state.sortAscending ? 'Asc (Antigos)' : 'Desc (Novos)'}`;
+    }
+
+    /* ==========================================================================
+       INICIALIZAÇÃO E EVENTOS
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      loadDatabase();
+
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      // Busca Instantânea com Debounce
+      searchInput.addEventListener('input', (e) => {
+        toggleClearSearchBtn();
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          state.searchQuery = e.target.value;
+          saveState();
+          renderList();
+        }, CONFIG.DEBOUNCE_DELAY_MS);
+      });
+
+      // Botão Limpar Busca
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        toggleClearSearchBtn();
+        saveState();
+        renderList();
+      });
+
+      // Selects de Controle
+      document.getElementById('viewModeSelect').addEventListener('change', (e) => {
+        state.viewMode = e.target.value;
+        saveState();
+        renderList();
+      });
+
+      document.getElementById('sortBySelect').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        saveState();
+        renderList();
+      });
+
+      document.getElementById('sortOrderBtn').addEventListener('click', () => {
+        state.sortAscending = !state.sortAscending;
+        updateSortBtnText();
+        saveState();
+        renderList();
+      });
+
+      // Modal de Canais
+      const modal = document.getElementById('channelModal');
+      document.getElementById('openChannelModalBtn').addEventListener('click', () => modal.style.display = 'flex');
+      document.getElementById('closeChannelModalBtn').addEventListener('click', () => modal.style.display = 'none');
+
+      document.getElementById('selectAllChannelsBtn').addEventListener('click', () => {
+        state.hiddenChannels = [];
+        saveState();
+        populateChannelModal();
+        renderList();
+      });
+
+      document.getElementById('deselectAllChannelsBtn').addEventListener('click', () => {
+        state.hiddenChannels = [...new Set(videoDatabase.map(v => v.canal))];
+        saveState();
+        populateChannelModal();
+        renderList();
+      });
+
+      // Navegação por Seletores
+      document.getElementById('yearSelect').addEventListener('change', scrollToSelectedDate);
+      document.getElementById('monthSelect').addEventListener('change', scrollToSelectedDate);
+
+      // Navegação por Setas
+      document.getElementById('yearUpBtn').addEventListener('click', () => navigateYear(-1));
+      document.getElementById('yearDownBtn').addEventListener('click', () => navigateYear(1));
+      document.getElementById('monthUpBtn').addEventListener('click', () => navigateMonth(-1));
+      document.getElementById('monthDownBtn').addEventListener('click', () => navigateMonth(1));
+
+      window.addEventListener('scroll', saveState);
+      window.addEventListener('resize', adjustBodyPadding);
+    });
+  </script>
+</body>
+</html>
