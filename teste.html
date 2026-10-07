@@ -112,12 +112,29 @@
     }
 
     /* ==========================================================================
-       3. LISTAGEM DE CARDS VERTICAIS
+       3. LISTAGEM DE CARDS VERTICAIS & MENSAGENS DE STATUS
        ========================================================================== */
     .container {
       max-width: 900px;
       margin: 20px auto;
       padding: 0 15px;
+    }
+
+    .status-message {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .error-message {
+      color: #ff5555;
+      background-color: rgba(255, 85, 85, 0.1);
+      border: 1px solid #ff5555;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
     }
 
     .card {
@@ -243,18 +260,21 @@
   </header>
 
   <!-- LISTAGEM DE CARDS VERTICAIS -->
-  <main class="container" id="videoListContainer"></main>
+  <main class="container" id="videoListContainer">
+    <div class="status-message">Carregando dados...</div>
+  </main>
 
-  <!-- SCRIPT BASE E LÓGICA -->
-  <script src="database.json"></script>
   <script>
     /* ==========================================================================
        4. VARIÁVEIS DE CONFIGURAÇÃO & ESTADO GLOBAL
        ========================================================================== */
     const CONFIG = {
       DEBOUNCE_DELAY_MS: 300,
-      LOCALSTORAGE_KEY: 'app_video_list_state'
+      LOCALSTORAGE_KEY: 'app_video_list_state',
+      DATA_URL: 'database.json'
     };
+
+    let videoDatabase = []; // Armazenará os dados vindos do fetch
 
     let state = {
       searchQuery: '',
@@ -289,8 +309,44 @@
     }
 
     /* ==========================================================================
-       6. PERSISTÊNCIA DE ESTADO (LocalStorage)
+       6. CARREGAMENTO ASSÍNCRONO E PERSISTÊNCIA DE ESTADO (Fetch / LocalStorage)
        ========================================================================== */
+    async function loadDatabase() {
+      const container = document.getElementById('videoListContainer');
+      try {
+        const response = await fetch(CONFIG.DATA_URL);
+        if (!response.ok) {
+          throw new Error(`Erro HTTP ${response.status}: Não foi possível carregar o arquivo ${CONFIG.DATA_URL}`);
+        }
+        
+        videoDatabase = await response.json();
+        
+        if (!Array.isArray(videoDatabase)) {
+          throw new Error('Formato inválido: O arquivo JSON deve conter um Array de objetos.');
+        }
+
+        // Renderiza após carregar com sucesso
+        populateYearSelector();
+        renderList();
+
+        // Restaura posição de rolagem salva previamente
+        if (state.scrollY) {
+          window.scrollTo(0, state.scrollY);
+        }
+
+      } catch (error) {
+        container.innerHTML = `
+          <div class="error-message">
+            <h3>Falha ao carregar a base de dados</h3>
+            <p style="margin-top: 8px;">${error.message}</p>
+            <p style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+              Certifique-se de que o arquivo <strong>database.json</strong> está no mesmo diretório do <strong>index.html</strong> e que você está acessando a página por um servidor (Ex: GitHub Pages, Live Server ou localhost).
+            </p>
+          </div>
+        `;
+      }
+    }
+
     function saveState() {
       state.scrollY = window.scrollY;
       localStorage.setItem(CONFIG.LOCALSTORAGE_KEY, JSON.stringify(state));
@@ -300,8 +356,8 @@
       const saved = localStorage.getItem(CONFIG.LOCALSTORAGE_KEY);
       if (saved) {
         state = { ...state, ...JSON.parse(saved) };
-        document.getElementById('searchInput').value = state.searchQuery;
-        document.getElementById('viewModeSelect').value = state.viewMode;
+        document.getElementById('searchInput').value = state.searchQuery || '';
+        document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
         updateSortBtnText();
       }
     }
@@ -313,8 +369,8 @@
       const container = document.getElementById('videoListContainer');
       container.innerHTML = '';
 
-      if (typeof videoDatabase === 'undefined' || !Array.isArray(videoDatabase)) {
-        container.innerHTML = '<p style="color:red;">Base de dados "database.json" não encontrada!</p>';
+      if (videoDatabase.length === 0) {
+        container.innerHTML = '<div class="status-message">Nenhum vídeo encontrado.</div>';
         return;
       }
 
@@ -323,6 +379,11 @@
       let items = videoDatabase.filter(item => {
         return normalizeText(item.titulo).includes(normalizedQuery);
       });
+
+      if (items.length === 0) {
+        container.innerHTML = '<div class="status-message">Nenhum resultado corresponde à sua busca.</div>';
+        return;
+      }
 
       // 2. Ordenação
       items.sort((a, b) => {
@@ -336,7 +397,7 @@
         const masterMap = new Map();
         const duplicatesMap = new Map();
 
-        // Separa masters e copias
+        // Separa masters e cópias
         items.forEach(item => {
           if (item.isMaster) {
             masterMap.set(item.videoId, item);
@@ -360,20 +421,19 @@
           container.appendChild(createCardElement(item, []));
         });
       }
-
-      // Preenche os selects de Ano na barra superior
-      populateYearSelector();
     }
 
-    //Criação do Card HTML
+    // Criação do Card HTML
     function createCardElement(item, duplicates = []) {
       const card = document.createElement('div');
       card.className = 'card';
-      card.dataset.year = new Date(item.dataPublicacao).getFullYear();
-      card.dataset.month = new Date(item.dataPublicacao).getMonth();
+      
+      const pubDate = new Date(item.dataPublicacao);
+      card.dataset.year = pubDate.getFullYear();
+      card.dataset.month = pubDate.getMonth();
 
-      const thumbUrl = `[https://img.youtube.com/vi/$](https://img.youtube.com/vi/$){item.videoId}/mqdefault.jpg`;
-      const videoUrl = `[https://www.youtube.com/watch?v=$](https://www.youtube.com/watch?v=$){item.videoId}`;
+      const thumbUrl = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
+      const videoUrl = `https://www.youtube.com/watch?v=${item.videoId}`;
 
       let privacyNotice = item.privacyStatus === 'removed' 
         ? `<span class="status-removed">(Removido)</span>` 
@@ -398,7 +458,7 @@
             <div class="drawer-content">
               ${duplicates.map(dup => `
                 <div style="margin-top: 6px; font-size: 12px;">
-                  <a href="[https://www.youtube.com/watch?v=$](https://www.youtube.com/watch?v=$){dup.videoId}" target="_blank" style="color: var(--text-main);">${dup.titulo}</a>
+                  <a href="https://www.youtube.com/watch?v=${dup.videoId}" target="_blank" style="color: var(--text-main);">${dup.titulo}</a>
                   <br><small style="color: var(--text-muted);">${dup.canal} - ${formatLocalDateTime(dup.dataPublicacao)}</small>
                 </div>
               `).join('')}
@@ -419,7 +479,7 @@
        ========================================================================== */
     function populateYearSelector() {
       const yearSelect = document.getElementById('yearSelect');
-      if (yearSelect.children.length > 1) return;
+      yearSelect.innerHTML = '<option value="">Ano</option>';
 
       const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))].sort();
       years.forEach(year => {
@@ -451,13 +511,10 @@
         `Ordem: ${state.sortAscending ? 'Ascendente (Antigos)' : 'Descendente (Novos)'}`;
     }
 
-    // Inicialização de Eventos
+    // Inicialização da Aplicação
     document.addEventListener('DOMContentLoaded', () => {
       loadState();
-      renderList();
-
-      // Restaura posição de rolagem
-      if (state.scrollY) window.scrollTo(0, state.scrollY);
+      loadDatabase(); // Busca o JSON e renderiza a lista
 
       // Evento de Busca com Debounce
       document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -484,11 +541,11 @@
         renderList();
       });
 
-      // Navegação por Seletores
+      // Navegação por Seletores de Data
       document.getElementById('yearSelect').addEventListener('change', scrollToSelectedDate);
       document.getElementById('monthSelect').addEventListener('change', scrollToSelectedDate);
 
-      // Salvar posição de scroll ao navegar
+      // Salvar posição de scroll
       window.addEventListener('scroll', saveState);
     });
   </script>
