@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudo de Vídeos - JAMstack</title>
+  <style>
+    /* ==========================================================================
+       1. REGRAS DE OURO & VARIÁVEIS DE TEMA (Tema Escuro)
+       ========================================================================== */
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-card: #252525;
+      --bg-drawer: #1a1a1a;
+      --text-main: #e0e0e0;
+      --text-muted: #aaaaaa;
+      --accent-color: #bb86fc;
+      --border-color: #333333;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      padding-top: 130px; /* Espaço para a barra fixa superior */
+      min-height: 100vh;
+    }
+
+    /* ==========================================================================
+       2. BARRA FIXA SUPERIOR DE CONTROLE & NAVEGAÇÃO
+       ========================================================================== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .controls-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    select, button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:hover, select:hover {
+      border-color: var(--accent-color);
+    }
+
+    .nav-time-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-primary);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .arrow-btn {
+      padding: 2px 6px;
+      font-size: 12px;
+      background: transparent;
+      border: none;
+    }
+
+    /* ==========================================================================
+       3. LISTAGEM DE CARDS VERTICAIS
+       ========================================================================== */
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-thumb {
+      width: 160px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Destaque para títulos compridos */
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-decoration: none;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .card-title:hover {
+      text-decoration: underline;
+    }
+
+    .card-metadata {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    /* videoID bem discreto */
+    .videoid-tag {
+      font-family: monospace;
+      font-size: 10px;
+      color: #666;
+    }
+
+    .status-removed {
+      color: #ff5555;
+      font-weight: bold;
+    }
+
+    /* Subdiretório / Gaveta para repetidos */
+    .drawer-toggle {
+      margin-top: 10px;
+      background: transparent;
+      color: var(--accent-color);
+      border: 1px dashed var(--accent-color);
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .drawer-content {
+      margin-top: 10px;
+      padding-left: 15px;
+      border-left: 2px solid var(--accent-color);
+      display: none;
+    }
+
+    .drawer-content.open {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA FIXA SUPERIOR -->
+  <header class="top-bar">
+    <div class="controls-container">
+      
+      <!-- Busca Instantânea -->
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar por título (ex: OBSIDIANA)...">
+      </div>
+
+      <!-- Modos de Visualização & Ordenamento -->
+      <div class="filter-group">
+        <select id="viewModeSelect">
+          <option value="consolidado">Consolidado (Apenas Masters)</option>
+          <option value="sequenciado">Sequenciado (Cronológico)</option>
+        </select>
+
+        <button id="sortOrderBtn" title="Inverter Ordem">Ordem: Asc ascendente</button>
+      </div>
+
+      <!-- Navegação Auxiliar de Rolagem (Ano e Mês) -->
+      <div class="nav-time-group">
+        <button class="arrow-btn" id="navUpBtn">▲</button>
+        <select id="yearSelect"><option value="">Ano</option></select>
+        <select id="monthSelect">
+          <option value="">Mês</option>
+          <option value="0">Jan</option><option value="1">Fev</option>
+          <option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">Mai</option><option value="5">Jun</option>
+          <option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Set</option><option value="9">Out</option>
+          <option value="10">Nov</option><option value="11">Dez</option>
+        </select>
+        <button class="arrow-btn" id="navDownBtn">▼</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- LISTAGEM DE CARDS VERTICAIS -->
+  <main class="container" id="videoListContainer"></main>
+
+  <!-- SCRIPT BASE E LÓGICA -->
+  <script src="database.js"></script>
+  <script>
+    /* ==========================================================================
+       4. VARIÁVEIS DE CONFIGURAÇÃO & ESTADO GLOBAL
+       ========================================================================== */
+    const CONFIG = {
+      DEBOUNCE_DELAY_MS: 300,
+      LOCALSTORAGE_KEY: 'app_video_list_state'
+    };
+
+    let state = {
+      searchQuery: '',
+      viewMode: 'consolidado',
+      sortAscending: true,
+      selectedYear: '',
+      selectedMonth: '',
+      scrollY: 0
+    };
+
+    let debounceTimer = null;
+
+    /* ==========================================================================
+       5. FUNÇÕES AUXILIARES DE TRATAMENTO DE TEXTO E DATA
+       ========================================================================== */
+
+    // Normalização para buscas flexíveis (desconsidera acentos e maiúsculas)
+    function normalizeText(str) {
+      if (!str) return '';
+      return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/e/g, 'i') // Permite variações simples tipo OBSIDIANA / OBSEDIANA
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    // Formatação da data e hora local
+    function formatLocalDateTime(isoDateStr) {
+      const date = new Date(isoDateStr);
+      return date.toLocaleString(); // Usa o fuso horário/idioma local do navegador
+    }
+
+    /* ==========================================================================
+       6. PERSISTÊNCIA DE ESTADO (LocalStorage)
+       ========================================================================== */
+    function saveState() {
+      state.scrollY = window.scrollY;
+      localStorage.setItem(CONFIG.LOCALSTORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(CONFIG.LOCALSTORAGE_KEY);
+      if (saved) {
+        state = { ...state, ...JSON.parse(saved) };
+        document.getElementById('searchInput').value = state.searchQuery;
+        document.getElementById('viewModeSelect').value = state.viewMode;
+        updateSortBtnText();
+      }
+    }
+
+    /* ==========================================================================
+       7. PROCESSAMENTO E RENDERIZAÇÃO DA LISTA
+       ========================================================================== */
+    function renderList() {
+      const container = document.getElementById('videoListContainer');
+      container.innerHTML = '';
+
+      if (typeof videoDatabase === 'undefined' || !Array.isArray(videoDatabase)) {
+        container.innerHTML = '<p style="color:red;">Base de dados "database.js" não encontrada!</p>';
+        return;
+      }
+
+      // 1. Filtragem por Busca
+      const normalizedQuery = normalizeText(state.searchQuery);
+      let items = videoDatabase.filter(item => {
+        return normalizeText(item.titulo).includes(normalizedQuery);
+      });
+
+      // 2. Ordenação
+      items.sort((a, b) => {
+        const dateA = new Date(a.dataPublicacao);
+        const dateB = new Date(b.dataPublicacao);
+        return state.sortAscending ? dateA - dateB : dateB - dateA;
+      });
+
+      // 3. Aplicação do Modo de Visualização
+      if (state.viewMode === 'consolidado') {
+        const masterMap = new Map();
+        const duplicatesMap = new Map();
+
+        // Separa masters e copias
+        items.forEach(item => {
+          if (item.isMaster) {
+            masterMap.set(item.videoId, item);
+          } else {
+            if (!duplicatesMap.has(item.masterId)) {
+              duplicatesMap.set(item.masterId, []);
+            }
+            duplicatesMap.get(item.masterId).push(item);
+          }
+        });
+
+        // Exibe apenas masters com suas gavetas
+        masterMap.forEach(masterItem => {
+          const duplicates = duplicatesMap.get(masterItem.videoId) || [];
+          container.appendChild(createCardElement(masterItem, duplicates));
+        });
+
+      } else {
+        // Sequenciado: Exibe todos sequencialmente
+        items.forEach(item => {
+          container.appendChild(createCardElement(item, []));
+        });
+      }
+
+      // Preenche os selects de Ano na barra superior
+      populateYearSelector();
+    }
+
+    //Criação do Card HTML
+    function createCardElement(item, duplicates = []) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.year = new Date(item.dataPublicacao).getFullYear();
+      card.dataset.month = new Date(item.dataPublicacao).getMonth();
+
+      const thumbUrl = `[https://img.youtube.com/vi/$](https://img.youtube.com/vi/$){item.videoId}/mqdefault.jpg`;
+      const videoUrl = `[https://www.youtube.com/watch?v=$](https://www.youtube.com/watch?v=$){item.videoId}`;
+
+      let privacyNotice = item.privacyStatus === 'removed' 
+        ? `<span class="status-removed">(Removido)</span>` 
+        : '';
+
+      card.innerHTML = `
+        <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail">
+        <div class="card-content">
+          <div>
+            <a href="${videoUrl}" target="_blank" class="card-title">${item.titulo}</a>
+            ${privacyNotice}
+          </div>
+          <div class="card-metadata">
+            <span><strong>Canal:</strong> ${item.canal}</span>
+            <span><strong>Publicado:</strong> ${formatLocalDateTime(item.dataPublicacao)}</span>
+            <span class="videoid-tag">ID: ${item.videoId}</span>
+          </div>
+          ${duplicates.length > 0 ? `
+            <button class="drawer-toggle" onclick="toggleDrawer(this)">
+              Ver +${duplicates.length} ocorrência(s)
+            </button>
+            <div class="drawer-content">
+              ${duplicates.map(dup => `
+                <div style="margin-top: 6px; font-size: 12px;">
+                  <a href="[https://www.youtube.com/watch?v=$](https://www.youtube.com/watch?v=$){dup.videoId}" target="_blank" style="color: var(--text-main);">${dup.titulo}</a>
+                  <br><small style="color: var(--text-muted);">${dup.canal} - ${formatLocalDateTime(dup.dataPublicacao)}</small>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      return card;
+    }
+
+    function toggleDrawer(btn) {
+      const drawer = btn.nextElementSibling;
+      drawer.classList.toggle('open');
+    }
+
+    /* ==========================================================================
+       8. CONTROLES DE NAVEGAÇÃO E EVENTOS
+       ========================================================================== */
+    function populateYearSelector() {
+      const yearSelect = document.getElementById('yearSelect');
+      if (yearSelect.children.length > 1) return;
+
+      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))].sort();
+      years.forEach(year => {
+        const opt = document.createElement('option');
+        opt.value = year;
+        opt.textContent = year;
+        yearSelect.appendChild(opt);
+      });
+    }
+
+    function scrollToSelectedDate() {
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+
+      const cards = document.querySelectorAll('.card');
+      for (let card of cards) {
+        const cardYear = card.dataset.year;
+        const cardMonth = card.dataset.month;
+
+        if ((!year || cardYear === year) && (!month || cardMonth === month)) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          break;
+        }
+      }
+    }
+
+    function updateSortBtnText() {
+      document.getElementById('sortOrderBtn').textContent = 
+        `Ordem: ${state.sortAscending ? 'Ascendente (Antigos)' : 'Descendente (Novos)'}`;
+    }
+
+    // Inicialização de Eventos
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderList();
+
+      // Restaura posição de rolagem
+      if (state.scrollY) window.scrollTo(0, state.scrollY);
+
+      // Evento de Busca com Debounce
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          state.searchQuery = e.target.value;
+          saveState();
+          renderList();
+        }, CONFIG.DEBOUNCE_DELAY_MS);
+      });
+
+      // Modo de Visualização
+      document.getElementById('viewModeSelect').addEventListener('change', (e) => {
+        state.viewMode = e.target.value;
+        saveState();
+        renderList();
+      });
+
+      // Inverter Ordem
+      document.getElementById('sortOrderBtn').addEventListener('click', () => {
+        state.sortAscending = !state.sortAscending;
+        updateSortBtnText();
+        saveState();
+        renderList();
+      });
+
+      // Navegação por Seletores
+      document.getElementById('yearSelect').addEventListener('change', scrollToSelectedDate);
+      document.getElementById('monthSelect').addEventListener('change', scrollToSelectedDate);
+
+      // Salvar posição de scroll ao navegar
+      window.addEventListener('scroll', saveState);
+    });
+  </script>
+</body>
+</html>
