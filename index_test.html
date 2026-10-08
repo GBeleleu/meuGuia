@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudo de Vídeos - JAMstack</title>
+  <title>[meuGuia] Marcelo Marins</title>
   <style>
     /* ==========================================================================
        1. REGRAS DE OURO & VARIÁVEIS DE TEMA (Tema Escuro)
@@ -15,7 +15,7 @@
       --bg-drawer: #1a1a1a;
       --text-main: #e0e0e0;
       --text-muted: #aaaaaa;
-      --accent-color: #bb86fc;
+      --accent-color: #66b3ab;
       --border-color: #333333;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -30,7 +30,8 @@
       background-color: var(--bg-primary);
       color: var(--text-main);
       font-family: var(--font-family);
-      padding-top: 140px; /* Será ajustado dinamicamente via JS */
+      /* O padding-top será ajustado via JavaScript dinamicamente para evitar sobreposição */
+      padding-top: 140px; 
       min-height: 100vh;
     }
 
@@ -44,30 +45,29 @@
       width: 100%;
       background-color: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
-      padding: 12px 20px;
+      padding: 12px 16px;
       z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     }
 
     .controls-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
       justify-content: space-between;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .search-wrapper {
-      position: relative;
+    .search-box {
       flex: 1;
-      min-width: 240px;
+      min-width: 220px;
     }
 
-    .search-wrapper input {
+    .search-box input {
       width: 100%;
-      padding: 10px 36px 10px 14px;
+      padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
       background-color: var(--bg-primary);
@@ -75,33 +75,15 @@
       font-size: 14px;
     }
 
-    .clear-btn {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 16px;
-      cursor: pointer;
-      display: none;
-      padding: 4px 8px;
-    }
-
-    .clear-btn:hover {
-      color: var(--text-main);
-    }
-
     .filter-group {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-      flex-wrap: wrap;
     }
 
     select, button {
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
       background-color: var(--bg-primary);
@@ -114,106 +96,89 @@
       border-color: var(--accent-color);
     }
 
-    select:disabled, button:disabled {
-      opacity: 0.5;
+    button:disabled, select:disabled {
+      opacity: 0.4;
       cursor: not-allowed;
-      border-color: var(--border-color);
+      border-color: var(--border-color) !important;
     }
 
-    .nav-time-group {
+    /* Controles de Navegação por Data */
+    .nav-time-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-unit {
       display: flex;
       align-items: center;
-      gap: 4px;
       background: var(--bg-primary);
-      padding: 4px 8px;
-      border-radius: 6px;
       border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 2px 4px;
     }
 
-    .nav-subgroup {
-      display: flex;
-      align-items: center;
-      gap: 2px;
+    .nav-unit select {
+      border: none;
+      background: transparent;
+      padding: 4px 2px;
     }
 
     .arrow-btn {
       padding: 2px 5px;
-      font-size: 11px;
+      font-size: 10px;
       background: transparent;
       border: none;
+      line-height: 1;
     }
 
     /* ==========================================================================
-       3. MODAL DE CANAIS
-       ========================================================================== */
-    .modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-
-    .modal-content {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 20px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .channel-list {
-      overflow-y: auto;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .channel-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-    }
-
-    /* ==========================================================================
-       4. LISTAGEM DE CARDS VERTICAIS & ESTRUTURA DOS CARDS
+       3. LISTAGEM DE CARDS VERTICAIS & MENSAGENS DE STATUS
        ========================================================================== */
     .container {
       max-width: 900px;
-      margin: 20px auto;
-      padding: 0 15px;
+      margin: 15px auto;
+      padding: 0 12px;
     }
 
+    .channel-group-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin: 24px 0 12px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .status-message {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .error-message {
+      color: #ff5555;
+      background-color: rgba(255, 85, 85, 0.1);
+      border: 1px solid #ff5555;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Novo Layout dos Cards */
     .card {
       background-color: var(--bg-card);
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 12px;
+      margin-bottom: 14px;
       display: flex;
-      gap: 16px;
+      gap: 14px;
       border: 1px solid var(--border-color);
       position: relative;
     }
 
-    /* Bloco da Thumbnail + Barra Inferior */
     .card-media-block {
       width: 160px;
       flex-shrink: 0;
@@ -230,10 +195,9 @@
       display: block;
     }
 
-    /* 4. Faixa mais escura sob a thumbnail para Duração e ID */
     .thumb-footer-bar {
       background-color: #111111;
-      padding: 4px 6px;
+      padding: 3px 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -249,21 +213,23 @@
     .videoid-tag {
       font-family: monospace;
       font-size: 9px;
-      color: #555555; /* ID ainda mais discreto */
+      color: #555555;
     }
 
     .card-content {
       flex: 1;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
+      padding-right: 35px; /* Espaço para não sobrepor o contador +N */
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--accent-color);
       text-decoration: none;
-      line-height: 1.3;
+      line-height: 1.35;
       margin-bottom: 4px;
       display: inline-block;
     }
@@ -272,7 +238,6 @@
       text-decoration: underline;
     }
 
-    /* 3. Canal abaixo do título, Publicado quebrando linha */
     .card-channel {
       font-size: 13px;
       color: var(--text-main);
@@ -289,12 +254,12 @@
     .status-removed {
       color: #ff5555;
       font-weight: bold;
-      margin-left: 6px;
       font-size: 12px;
+      margin-left: 6px;
     }
 
-    /* 5. Indicador de Ocorrências no canto inferior direito (+N) */
-    .drawer-toggle-badge {
+    /* Botão/Indicador +N da Gaveta */
+    .drawer-toggle {
       position: absolute;
       bottom: 12px;
       right: 12px;
@@ -302,22 +267,26 @@
       color: var(--accent-color);
       border: 1px solid var(--accent-color);
       border-radius: 12px;
-      padding: 3px 10px;
-      font-size: 13px;
+      padding: 2px 8px;
+      font-size: 12px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .drawer-toggle-badge:hover {
+    .drawer-toggle:hover {
       background: var(--accent-color);
       color: var(--bg-primary);
     }
 
     .drawer-content {
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px dashed var(--border-color);
+      margin-top: 12px;
+      padding-left: 12px;
+      border-left: 2px solid var(--accent-color);
       display: none;
+      background-color: var(--bg-drawer);
+      border-radius: 0 8px 8px 0;
+      padding-top: 8px;
+      padding-bottom: 8px;
       width: 100%;
     }
 
@@ -325,61 +294,101 @@
       display: block;
     }
 
-    .drawer-item {
-      margin-bottom: 12px;
-    }
-
-    .drawer-item .card {
-      margin-bottom: 8px;
-      background-color: var(--bg-drawer);
-    }
-
-    .channel-group-header {
-      font-size: 18px;
-      font-weight: bold;
-      color: var(--accent-color);
-      margin: 24px 0 12px 0;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    /* ==========================================================================
-       5. AJUSTES RESPONSIVOS (CELULAR)
-       ========================================================================== */
+    /* Ajuste para Celular */
     @media (max-width: 600px) {
       .card {
-        flex-direction: row; /* Mantém lado a lado de forma compacta */
+        flex-direction: row;
         gap: 10px;
         padding: 10px;
       }
-
-      /* 1. Ajuste da Thumbnail no celular */
       .card-media-block {
         width: 110px;
       }
-
       .card-thumb {
         height: 62px;
       }
-
       .card-title {
-        font-size: 14px;
+        font-size: 13px;
       }
-
       .card-channel {
         font-size: 11px;
       }
-
       .card-date {
         font-size: 10px;
       }
-
-      .drawer-toggle-badge {
+      .drawer-toggle {
         bottom: 8px;
         right: 8px;
         font-size: 11px;
-        padding: 2px 7px;
+        padding: 1px 6px;
       }
+    }
+
+    /* ==========================================================================
+       4. MODAL DE FILTRO DE CANAIS
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 480px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      flex: 1;
+      margin-bottom: 12px;
+    }
+
+    .channel-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
   </style>
 </head>
@@ -389,39 +398,39 @@
   <header class="top-bar" id="topBar">
     <div class="controls-container">
       
-      <!-- Busca Instantânea -->
-      <div class="search-wrapper">
+      <!-- Busca Instantânea sem Vogais/Flexível -->
+      <div class="search-box">
         <input type="text" id="searchInput" placeholder="Buscar por título...">
-        <!-- Botão para limpar a busca -->
-        <button class="clear-btn" id="clearSearchBtn" title="Limpar busca">✕</button>
       </div>
 
       <!-- Modos de Visualização & Ordenamento -->
       <div class="filter-group">
         <select id="viewModeSelect">
-          <option value="consolidado">Consolidado (Apenas Masters)</option>
-          <option value="sequenciado">Sequenciado (Cronológico)</option>
-          <option value="sequenciado_canal">Sequenciado (Agrupado por Canal)</option>
+          <option value="consolidado">Consolidado (Agrupado por conteúdo)</option>
+          <option value="sequenciado">Sequenciado (Canais mesclados)</option>
+          <option value="sequenciado-canais">Sequenciado (Canais separados)</option>
         </select>
 
         <select id="sortBySelect">
-          <option value="data">Data</option>
+          <option value="data">Data de Publicação</option>
           <option value="titulo">Título</option>
           <option value="duracao">Duração</option>
         </select>
 
-        <button id="sortOrderBtn" title="Inverter Ordem">Ordem: Asc (Antigos)</button>
-        <button id="openChannelModalBtn">Canais</button>
+        <button id="sortOrderBtn" title="Inverter Ordem">Asc ▲</button>
+        <button id="channelsModalBtn">Filtro</button>
       </div>
 
-      <!-- Navegação Auxiliar de Rolagem (Ano e Mês) -->
-      <div class="nav-time-group" id="navTimeGroup">
-        <div class="nav-subgroup">
+      <!-- Navegação Auxiliar de Rolagem (Ano e Mês com Setas Individuais) -->
+      <div class="nav-time-container" id="navTimeContainer">
+        <!-- Ano -->
+        <div class="nav-unit">
           <button class="arrow-btn" id="yearUpBtn">▲</button>
           <select id="yearSelect"><option value="">Ano</option></select>
           <button class="arrow-btn" id="yearDownBtn">▼</button>
         </div>
-        <div class="nav-subgroup">
+        <!-- Mês -->
+        <div class="nav-unit">
           <button class="arrow-btn" id="monthUpBtn">▲</button>
           <select id="monthSelect">
             <option value="">Mês</option>
@@ -439,45 +448,49 @@
     </div>
   </header>
 
-  <!-- MODAL DE CANAIS -->
-  <div class="modal-backdrop" id="channelModal">
-    <div class="modal-content">
+  <!-- LISTAGEM DE CARDS VERTICAIS -->
+  <main class="container" id="videoListContainer">
+    <div class="status-message">Carregando dados...</div>
+  </main>
+
+  <!-- MODAL DE FILTRO POR CANAL -->
+  <div class="modal-overlay" id="channelsModal">
+    <div class="modal-card">
       <div class="modal-header">
-        <h3>Filtrar por Canais</h3>
-        <div>
-          <button id="selectAllChannelsBtn">Todos</button>
-          <button id="deselectAllChannelsBtn">Nenhum</button>
-        </div>
+        <h3>Filtrar por Canal</h3>
+        <button id="closeModalBtn">&times;</button>
       </div>
-      <div class="channel-list" id="channelListContainer"></div>
-      <div style="text-align: right;">
-        <button id="closeChannelModalBtn">Fechar</button>
+      <div class="modal-body" id="channelsListContainer">
+        <!-- Checkboxes de canais inseridos dinamicamente -->
+      </div>
+      <div class="modal-actions">
+        <div>
+          <button id="selectAllChannelsBtn">Marcar Todos</button>
+          <button id="deselectAllChannelsBtn">Desmarcar Todos</button>
+        </div>
+        <button id="applyChannelsBtn" style="border-color: var(--accent-color);">Aplicar</button>
       </div>
     </div>
   </div>
 
-  <!-- LISTAGEM DE CARDS VERTICAIS -->
-  <main class="container" id="videoListContainer">
-    <p style="text-align: center; color: var(--text-muted);">Carregando vídeos...</p>
-  </main>
-
   <script>
     /* ==========================================================================
-       CONFIGURAÇÕES E ESTADO GLOBAL
+       5. CONFIGURAÇÕES E ESTADO GLOBAL
        ========================================================================== */
     const CONFIG = {
       DEBOUNCE_DELAY_MS: 300,
-      LOCALSTORAGE_KEY: 'app_video_list_state_v2'
+      LOCALSTORAGE_KEY: 'app_video_list_official_state',
+      DATA_URL: 'database.json'
     };
 
-    let videoDatabase = [];
+    let videoDatabase = []; // Array de dados carregados do JSON
 
     let state = {
       searchQuery: '',
-      viewMode: 'consolidado',
-      sortBy: 'data',
+      viewMode: 'consolidado', // consolidado | sequenciado | sequenciado-canais
+      sortBy: 'data',          // data | titulo | duracao
       sortAscending: true,
-      hiddenChannels: [],
+      hiddenChannels: [],      // Lista de canais ocultados
       scrollY: 0
     };
 
@@ -485,48 +498,52 @@
     let observer = null;
 
     /* ==========================================================================
-       FUNÇÕES AUXILIARES
+       6. FUNÇÕES AUXILIARES (TEXTO, DURAÇÃO, DATAS)
        ========================================================================== */
 
-    // Normalização mantendo a vogal 'A', mas eliminando E, I, O, U, acentos e caracteres especiais
+    // Normalização flexível desconsiderando acentos e vogais
     function normalizeText(str) {
       if (!str) return '';
       return str
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[eiou]/g, '') // Remove E, I, O, U (mantém A)
+        .replace(/[aeiou]/g, '') // Desconsidera todas as vogais
         .replace(/[^a-z0-9]/g, '');
     }
 
+    // Formatação de data/hora para fuso horário e idioma local do dispositivo
     function formatLocalDateTime(isoDateStr) {
       if (!isoDateStr) return '';
       const date = new Date(isoDateStr);
       return date.toLocaleString();
     }
 
-    // Formatação de segundos no padrão HH:MM:SS ou MM:SS
-    function formatDuration(seconds) {
-      if (!seconds || isNaN(seconds)) return '0:00';
-      const h = Math.floor(seconds / 3600);
-      const m = Math.floor((seconds % 3600) / 60);
-      const s = Math.floor(seconds % 60);
+    // Formatação de segundos no padrão de tempo do YouTube (HH:MM:SS ou MM:SS)
+    function formatDuration(totalSeconds) {
+      if (!totalSeconds || isNaN(totalSeconds)) return '0:00';
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-      const sStr = s < 10 ? `0${s}` : `${s}`;
-      if (h > 0) {
-        const mStr = m < 10 ? `0${m}` : `${m}`;
-        return `${h}:${mStr}:${sStr}`;
+      const pad = (num) => String(num).padStart(2, '0');
+
+      if (hours > 0) {
+        return `${hours}:${pad(minutes)}:${pad(seconds)}`;
       }
-      return `${m}:${sStr}`;
+      return `${minutes}:${pad(seconds)}`;
     }
 
+    // Redimensiona o padding do Body de acordo com a altura da barra fixa
     function adjustBodyPadding() {
-      const topBarHeight = document.getElementById('topBar').offsetHeight;
-      document.body.style.paddingTop = `${topBarHeight + 15}px`;
+      const topBar = document.getElementById('topBar');
+      if (topBar) {
+        document.body.style.paddingTop = `${topBar.offsetHeight + 15}px`;
+      }
     }
 
     /* ==========================================================================
-       PERSISTÊNCIA DE ESTADO (LocalStorage)
+       7. PERSISTÊNCIA DE ESTADO E CARREGAMENTO
        ========================================================================== */
     function saveState() {
       state.scrollY = window.scrollY;
@@ -536,83 +553,102 @@
     function loadState() {
       const saved = localStorage.getItem(CONFIG.LOCALSTORAGE_KEY);
       if (saved) {
-        state = { ...state, ...JSON.parse(saved) };
-        const searchInput = document.getElementById('searchInput');
-        searchInput.value = state.searchQuery || '';
-        toggleClearSearchBtn();
-        document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
-        document.getElementById('sortBySelect').value = state.sortBy || 'data';
-        updateSortBtnText();
+        try {
+          state = { ...state, ...JSON.parse(saved) };
+          document.getElementById('searchInput').value = state.searchQuery || '';
+          document.getElementById('viewModeSelect').value = state.viewMode || 'consolidado';
+          document.getElementById('sortBySelect').value = state.sortBy || 'data';
+          updateSortBtnText();
+        } catch (e) {
+          console.error("Erro ao carregar o estado:", e);
+        }
       }
     }
 
-    function toggleClearSearchBtn() {
-      const searchInput = document.getElementById('searchInput');
-      const clearBtn = document.getElementById('clearSearchBtn');
-      clearBtn.style.display = searchInput.value ? 'block' : 'none';
-    }
-
-    /* ==========================================================================
-       CARREGAMENTO DE DADOS
-       ========================================================================== */
     async function loadDatabase() {
+      const container = document.getElementById('videoListContainer');
       try {
-        const response = await fetch('database.json');
-        if (!response.ok) throw new Error('Falha ao carregar o arquivo database.json');
+        const response = await fetch(CONFIG.DATA_URL);
+        if (!response.ok) {
+          throw new Error(`Erro HTTP ${response.status}: Não foi possível acessar ${CONFIG.DATA_URL}`);
+        }
+        
         videoDatabase = await response.json();
         
-        populateChannelModal();
+        if (!Array.isArray(videoDatabase)) {
+          throw new Error('Estrutura inválida: O JSON deve conter uma lista (array) de objetos.');
+        }
+
         populateYearSelector();
+        populateChannelsModal();
         renderList();
 
-        if (state.scrollY) window.scrollTo(0, state.scrollY);
-      } catch (err) {
-        document.getElementById('videoListContainer').innerHTML = 
-          `<p style="color:#ff5555; text-align:center;">Erro: ${err.message}<br>Verifique se o arquivo database.json está no mesmo diretório.</p>`;
+        if (state.scrollY) {
+          window.scrollTo(0, state.scrollY);
+        }
+
+      } catch (error) {
+        container.innerHTML = `
+          <div class="error-message">
+            <h3>Erro de Carregamento</h3>
+            <p style="margin-top:8px;">${error.message}</p>
+            <p style="margin-top:8px; font-size:12px; color: var(--text-muted);">
+              Verifique se o arquivo <strong>database.json</strong> está na mesma pasta que o <strong>index.html</strong> e executando através de um servidor local ou GitHub Pages.
+            </p>
+          </div>
+        `;
       }
     }
 
     /* ==========================================================================
-       PROCESSAMENTO E RENDERIZAÇÃO
+       8. PROCESSAMENTO, RENDERIZAÇÃO E CARDS
        ========================================================================== */
-    function sortItems(items) {
-      return items.sort((a, b) => {
-        let res = 0;
-        if (state.sortBy === 'data') {
-          res = new Date(a.dataPublicacao) - new Date(b.dataPublicacao);
-        } else if (state.sortBy === 'titulo') {
-          res = a.titulo.localeCompare(b.titulo);
-        } else if (state.sortBy === 'duracao') {
-          res = (a.duracaoSegundos || 0) - (b.duracaoSegundos || 0);
-        }
-        return state.sortAscending ? res : -res;
-      });
-    }
-
     function renderList() {
       const container = document.getElementById('videoListContainer');
       container.innerHTML = '';
 
-      if (!videoDatabase.length) return;
+      if (videoDatabase.length === 0) {
+        container.innerHTML = '<div class="status-message">Nenhum vídeo cadastrado.</div>';
+        return;
+      }
 
-      // Habilita/Desabilita seletores de data dependendo da ordenação
-      const isDateSort = state.sortBy === 'data';
-      document.querySelectorAll('#navTimeGroup select, #navTimeGroup button').forEach(el => {
-        el.disabled = !isDateSort;
-      });
+      // 1. Ocultar Canais Desmarcados
+      let items = videoDatabase.filter(item => !state.hiddenChannels.includes(item.canal));
 
-      // 1. Filtros (Busca + Canais)
+      // 2. Filtragem por Busca sem Vogais
       const normalizedQuery = normalizeText(state.searchQuery);
-      let items = videoDatabase.filter(item => {
-        const matchesQuery = normalizeText(item.titulo).includes(normalizedQuery);
-        const isChannelVisible = !state.hiddenChannels.includes(item.canal);
-        return matchesQuery && isChannelVisible;
+      if (normalizedQuery) {
+        items = items.filter(item => normalizeText(item.titulo).includes(normalizedQuery));
+      }
+
+      if (items.length === 0) {
+        container.innerHTML = '<div class="status-message">Nenhum resultado corresponde aos filtros aplicados.</div>';
+        return;
+      }
+
+      // 3. Ordenação Dinâmica
+      items.sort((a, b) => {
+        let valA, valB;
+        if (state.sortBy === 'titulo') {
+          valA = a.titulo.toLowerCase();
+          valB = b.titulo.toLowerCase();
+          return state.sortAscending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else if (state.sortBy === 'duracao') {
+          valA = a.duracaoSegundos || 0;
+          valB = b.duracaoSegundos || 0;
+        } else {
+          // 'data'
+          valA = new Date(a.dataPublicacao);
+          valB = new Date(b.dataPublicacao);
+        }
+        return state.sortAscending ? valA - valB : valB - valA;
       });
 
-      // 2. Ordenação Principal
-      items = sortItems(items);
+      // Habilita/Desabilita seletores de data baseando-se na ordenação por data
+      const isDateSorted = state.sortBy === 'data';
+      toggleDateNavControls(isDateSorted);
 
-      // 3. Modos de Visualização
+      // 4. Modos de Visualização
       if (state.viewMode === 'consolidado') {
         const masterMap = new Map();
         const duplicatesMap = new Map();
@@ -629,19 +665,12 @@
         });
 
         masterMap.forEach(masterItem => {
-          let duplicates = duplicatesMap.get(masterItem.videoId) || [];
-          
-          // Ordena as ocorrências da gaveta cronologicamente
-          duplicates.sort((a, b) => {
-            const dateA = new Date(a.dataPublicacao);
-            const dateB = new Date(b.dataPublicacao);
-            return state.sortAscending ? dateA - dateB : dateB - dateA;
-          });
-
+          const duplicates = duplicatesMap.get(masterItem.videoId) || [];
           container.appendChild(createCardElement(masterItem, duplicates));
         });
 
-      } else if (state.viewMode === 'sequenciado_canal') {
+      } else if (state.viewMode === 'sequenciado-canais') {
+        // Agrupado por Blocos de Canal
         const channelGroups = new Map();
         items.forEach(item => {
           if (!channelGroups.has(item.canal)) {
@@ -650,40 +679,41 @@
           channelGroups.get(item.canal).push(item);
         });
 
-        channelGroups.forEach((channelItems, channelName) => {
-          const groupHeader = document.createElement('div');
-          groupHeader.className = 'channel-group-header';
-          groupHeader.textContent = channelName;
-          container.appendChild(groupHeader);
+        channelGroups.forEach((groupItems, channelName) => {
+          const groupTitle = document.createElement('div');
+          groupTitle.className = 'channel-group-title';
+          groupTitle.textContent = channelName;
+          container.appendChild(groupTitle);
 
-          channelItems.forEach(item => {
-            container.appendChild(createCardElement(item));
+          groupItems.forEach(item => {
+            container.appendChild(createCardElement(item, []));
           });
         });
 
       } else {
-        // Sequenciado simples
+        // Sequenciado Cronológico Simples
         items.forEach(item => {
-          container.appendChild(createCardElement(item));
+          container.appendChild(createCardElement(item, []));
         });
       }
 
-      setupIntersectionObserver();
-      adjustBodyPadding();
+      setupScrollObserver();
     }
 
-    // Criação dos Cards de Vídeo
+    // Criação do Elemento HTML do Card com Estrutura Reformulada
     function createCardElement(item, duplicates = []) {
       const card = document.createElement('div');
       card.className = 'card';
-      card.dataset.year = new Date(item.dataPublicacao).getFullYear();
-      card.dataset.month = new Date(item.dataPublicacao).getMonth();
+      
+      const pubDate = new Date(item.dataPublicacao);
+      card.dataset.year = pubDate.getFullYear();
+      card.dataset.month = pubDate.getMonth();
 
       const thumbUrl = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
       const videoUrl = `https://www.youtube.com/watch?v=${item.videoId}`;
 
-      const privacyNotice = item.privacyStatus === 'removed' 
-        ? `<span class="status-removed">(Removido)</span>` 
+      let privacyNotice = item.privacyStatus === 'removed' 
+        ? `<span class="status-removed">(Vídeo removido)</span>` 
         : '';
 
       card.innerHTML = `
@@ -703,7 +733,7 @@
           <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}</span>
 
           ${duplicates.length > 0 ? `
-            <button class="drawer-toggle-badge" onclick="toggleDrawer(this)" title="Ver ocorrências">
+            <button class="drawer-toggle" onclick="toggleDrawer(this)" title="Ver ocorrências">
               +${duplicates.length}
             </button>
             <div class="drawer-content"></div>
@@ -711,14 +741,11 @@
         </div>
       `;
 
-      // Preenche a gaveta com cards completos se houver duplicatas
+      // Preenche a gaveta do modo consolidado com cards completos
       if (duplicates.length > 0) {
         const drawerContent = card.querySelector('.drawer-content');
-        duplicates.forEach(dup => {
-          const drawerItemWrapper = document.createElement('div');
-          drawerItemWrapper.className = 'drawer-item';
-          drawerItemWrapper.appendChild(createCardElement(dup));
-          drawerContent.appendChild(drawerItemWrapper);
+        duplicates.forEach(dupItem => {
+          drawerContent.appendChild(createCardElement(dupItem, []));
         });
       }
 
@@ -731,49 +758,16 @@
     }
 
     /* ==========================================================================
-       MODAL DE CANAIS
-       ========================================================================== */
-    function populateChannelModal() {
-      const container = document.getElementById('channelListContainer');
-      container.innerHTML = '';
-
-      const channels = [...new Set(videoDatabase.map(v => v.canal))].sort();
-
-      channels.forEach(channel => {
-        const label = document.createElement('label');
-        label.className = 'channel-item';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = channel;
-        checkbox.checked = !state.hiddenChannels.includes(channel);
-
-        checkbox.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            state.hiddenChannels = state.hiddenChannels.filter(c => c !== channel);
-          } else {
-            if (!state.hiddenChannels.includes(channel)) {
-              state.hiddenChannels.push(channel);
-            }
-          }
-          saveState();
-          renderList();
-        });
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(channel));
-        container.appendChild(label);
-      });
-    }
-
-    /* ==========================================================================
-       NAVEGAÇÃO E OBSERVAÇÃO DE ROLAGEM
+       9. NAVEGAÇÃO E ATUALIZAÇÃO DINÂMICA
        ========================================================================== */
     function populateYearSelector() {
       const yearSelect = document.getElementById('yearSelect');
       yearSelect.innerHTML = '<option value="">Ano</option>';
 
-      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))].sort();
+      const years = [...new Set(videoDatabase.map(v => new Date(v.dataPublicacao).getFullYear()))]
+        .filter(y => !isNaN(y))
+        .sort((a, b) => a - b);
+
       years.forEach(year => {
         const opt = document.createElement('option');
         opt.value = year;
@@ -782,93 +776,124 @@
       });
     }
 
-    function scrollToSelectedDate() {
-      const year = document.getElementById('yearSelect').value;
-      const month = document.getElementById('monthSelect').value;
-
-      if (!year && month === '') return;
-
-      const cards = document.querySelectorAll('#videoListContainer > .card');
-      for (let card of cards) {
-        const cardYear = card.dataset.year;
-        const cardMonth = card.dataset.month;
-
-        if ((!year || cardYear === year) && (month === '' || cardMonth === month)) {
-          const topBarHeight = document.getElementById('topBar').offsetHeight;
-          const elementPosition = card.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({
-            top: elementPosition - topBarHeight - 10,
-            behavior: 'smooth'
-          });
-          break;
-        }
-      }
+    function toggleDateNavControls(enable) {
+      const container = document.getElementById('navTimeContainer');
+      const elements = container.querySelectorAll('select, button');
+      elements.forEach(el => el.disabled = !enable);
     }
 
-    function navigateYear(delta) {
-      const yearSelect = document.getElementById('yearSelect');
-      const options = Array.from(yearSelect.options).map(o => o.value).filter(v => v !== '');
-      if (!options.length) return;
-
-      let currentIndex = options.indexOf(yearSelect.value);
-      let nextIndex = currentIndex + delta;
-
-      if (nextIndex >= 0 && nextIndex < options.length) {
-        yearSelect.value = options[nextIndex];
-        scrollToSelectedDate();
-      }
-    }
-
-    function navigateMonth(delta) {
-      const monthSelect = document.getElementById('monthSelect');
-      let currentVal = monthSelect.value === '' ? -1 : parseInt(monthSelect.value);
-      let nextVal = currentVal + delta;
-
-      if (nextVal >= 0 && nextVal <= 11) {
-        monthSelect.value = nextVal;
-        scrollToSelectedDate();
-      }
-    }
-
-    function setupIntersectionObserver() {
+    function setupScrollObserver() {
       if (observer) observer.disconnect();
+
+      const cards = document.querySelectorAll('.card');
+      if (cards.length === 0) return;
 
       observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && state.sortBy === 'data') {
-            const year = entry.target.dataset.year;
-            const month = entry.target.dataset.month;
-            if (year && month !== undefined) {
-              document.getElementById('yearSelect').value = year;
-              document.getElementById('monthSelect').value = month;
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            if (card.dataset.year && card.dataset.month) {
+              document.getElementById('yearSelect').value = card.dataset.year;
+              document.getElementById('monthSelect').value = card.dataset.month;
             }
           }
         });
       }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
 
-      document.querySelectorAll('#videoListContainer > .card').forEach(card => {
-        observer.observe(card);
-      });
+      cards.forEach(card => observer.observe(card));
+    }
+
+    function scrollToSelectedDate() {
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+
+      const cards = document.querySelectorAll('.card');
+      for (let card of cards) {
+        const cardYear = card.dataset.year;
+        const cardMonth = card.dataset.month;
+
+        if ((!year || cardYear === year) && (!month || cardMonth === month)) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          break;
+        }
+      }
+    }
+
+    function navigateSelect(selectId, direction) {
+      const select = document.getElementById(selectId);
+      const options = Array.from(select.options);
+      let currentIndex = select.selectedIndex;
+
+      let nextIndex = currentIndex + direction;
+      if (nextIndex >= 0 && nextIndex < options.length) {
+        select.selectedIndex = nextIndex;
+        scrollToSelectedDate();
+      }
     }
 
     function updateSortBtnText() {
-      document.getElementById('sortOrderBtn').textContent = 
-        `Ordem: ${state.sortAscending ? 'Asc (Antigos)' : 'Desc (Novos)'}`;
+      document.getElementById('sortOrderBtn').textContent = state.sortAscending ? 'Asc ▲' : 'Desc ▼';
     }
 
     /* ==========================================================================
-       INICIALIZAÇÃO E EVENTOS
+       10. MODAL DE CANAIS
+       ========================================================================== */
+    function populateChannelsModal() {
+      const container = document.getElementById('channelsListContainer');
+      container.innerHTML = '';
+
+      const channels = [...new Set(videoDatabase.map(v => v.canal))].filter(Boolean).sort();
+
+      channels.forEach(channel => {
+        const label = document.createElement('label');
+        label.className = 'channel-checkbox-item';
+        const isChecked = !state.hiddenChannels.includes(channel);
+
+        label.innerHTML = `
+          <input type="checkbox" value="${channel}" ${isChecked ? 'checked' : ''}>
+          <span>${channel}</span>
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function openChannelsModal() {
+      populateChannelsModal();
+      document.getElementById('channelsModal').classList.add('open');
+    }
+
+    function closeChannelsModal() {
+      document.getElementById('channelsModal').classList.remove('open');
+    }
+
+    function applyChannelsFilter() {
+      const checkboxes = document.querySelectorAll('#channelsListContainer input[type="checkbox"]');
+      const hidden = [];
+
+      checkboxes.forEach(cb => {
+        if (!cb.checked) {
+          hidden.push(cb.value);
+        }
+      });
+
+      state.hiddenChannels = hidden;
+      saveState();
+      renderList();
+      closeChannelsModal();
+    }
+
+    /* ==========================================================================
+       11. INICIALIZAÇÃO DE EVENTOS
        ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
       loadState();
+      adjustBodyPadding();
+      window.addEventListener('resize', adjustBodyPadding);
+
       loadDatabase();
 
-      const searchInput = document.getElementById('searchInput');
-      const clearSearchBtn = document.getElementById('clearSearchBtn');
-
       // Busca Instantânea com Debounce
-      searchInput.addEventListener('input', (e) => {
-        toggleClearSearchBtn();
+      document.getElementById('searchInput').addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
           state.searchQuery = e.target.value;
@@ -877,16 +902,7 @@
         }, CONFIG.DEBOUNCE_DELAY_MS);
       });
 
-      // Botão Limpar Busca
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        state.searchQuery = '';
-        toggleClearSearchBtn();
-        saveState();
-        renderList();
-      });
-
-      // Selects de Controle
+      // Modos de Visualização e Ordenação
       document.getElementById('viewModeSelect').addEventListener('change', (e) => {
         state.viewMode = e.target.value;
         saveState();
@@ -906,37 +922,31 @@
         renderList();
       });
 
-      // Modal de Canais
-      const modal = document.getElementById('channelModal');
-      document.getElementById('openChannelModalBtn').addEventListener('click', () => modal.style.display = 'flex');
-      document.getElementById('closeChannelModalBtn').addEventListener('click', () => modal.style.display = 'none');
-
-      document.getElementById('selectAllChannelsBtn').addEventListener('click', () => {
-        state.hiddenChannels = [];
-        saveState();
-        populateChannelModal();
-        renderList();
-      });
-
-      document.getElementById('deselectAllChannelsBtn').addEventListener('click', () => {
-        state.hiddenChannels = [...new Set(videoDatabase.map(v => v.canal))];
-        saveState();
-        populateChannelModal();
-        renderList();
-      });
-
-      // Navegação por Seletores
+      // Navegação Ano e Mês
       document.getElementById('yearSelect').addEventListener('change', scrollToSelectedDate);
       document.getElementById('monthSelect').addEventListener('change', scrollToSelectedDate);
 
-      // Navegação por Setas
-      document.getElementById('yearUpBtn').addEventListener('click', () => navigateYear(-1));
-      document.getElementById('yearDownBtn').addEventListener('click', () => navigateYear(1));
-      document.getElementById('monthUpBtn').addEventListener('click', () => navigateMonth(-1));
-      document.getElementById('monthDownBtn').addEventListener('click', () => navigateMonth(1));
+      // Setas de Navegação Individuais
+      document.getElementById('yearUpBtn').addEventListener('click', () => navigateSelect('yearSelect', -1));
+      document.getElementById('yearDownBtn').addEventListener('click', () => navigateSelect('yearSelect', 1));
+      document.getElementById('monthUpBtn').addEventListener('click', () => navigateSelect('monthSelect', -1));
+      document.getElementById('monthDownBtn').addEventListener('click', () => navigateSelect('monthSelect', 1));
 
+      // Eventos do Modal de Canais
+      document.getElementById('channelsModalBtn').addEventListener('click', openChannelsModal);
+      document.getElementById('closeModalBtn').addEventListener('click', closeChannelsModal);
+      document.getElementById('applyChannelsBtn').addEventListener('click', applyChannelsFilter);
+
+      document.getElementById('selectAllChannelsBtn').addEventListener('click', () => {
+        document.querySelectorAll('#channelsListContainer input[type="checkbox"]').forEach(cb => cb.checked = true);
+      });
+
+      document.getElementById('deselectAllChannelsBtn').addEventListener('click', () => {
+        document.querySelectorAll('#channelsListContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+      });
+
+      // Salva scroll na rolagem
       window.addEventListener('scroll', saveState);
-      window.addEventListener('resize', adjustBodyPadding);
     });
   </script>
 </body>
