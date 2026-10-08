@@ -283,16 +283,23 @@
       padding-left: 12px;
       border-left: 2px solid var(--accent-color);
       display: none;
-      background-color: var(--bg-drawer);
+      background-color: var(--bg-card); /* Fundo igual ao do card principal */
       border-radius: 0 8px 8px 0;
       padding-top: 8px;
       padding-bottom: 8px;
       width: 100%;
     }
 
+    /* Cards dentro da gaveta ficam com tom mais escuro */
+    .drawer-content .card {
+      background-color: var(--bg-drawer);
+      margin-bottom: 8px;
+    }
+
     .drawer-content.open {
       display: block;
     }
+  
 
     /* Ajuste para Celular */
     @media (max-width: 600px) {
@@ -741,11 +748,13 @@
         </div>
       `;
 
-      // Preenche a gaveta do modo consolidado com cards completos
+// Preenche a gaveta do modo consolidado com cards completos e classe específica
       if (duplicates.length > 0) {
         const drawerContent = card.querySelector('.drawer-content');
         duplicates.forEach(dupItem => {
-          drawerContent.appendChild(createCardElement(dupItem, []));
+          const childCard = createCardElement(dupItem, []);
+          childCard.classList.add('child-card');
+          drawerContent.appendChild(childCard);
         });
       }
 
