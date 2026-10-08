@@ -167,50 +167,70 @@
       margin-top: 20px;
     }
 
+    /* Novo Layout dos Cards */
     .card {
       background-color: var(--bg-card);
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       margin-bottom: 14px;
       display: flex;
       gap: 14px;
       border: 1px solid var(--border-color);
+      position: relative;
     }
 
-    @media (max-width: 600px) {
-      .card {
-        flex-direction: column;
-      }
-      .card-thumb {
-        width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 16 / 9;
-      }
+    .card-media-block {
+      width: 160px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     .card-thumb {
-      width: 160px;
+      width: 100%;
       height: 90px;
       object-fit: cover;
-      border-radius: 4px;
-      flex-shrink: 0;
+      display: block;
+    }
+
+    .thumb-footer-bar {
+      background-color: #111111;
+      padding: 3px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    .duration-tag {
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .videoid-tag {
+      font-family: monospace;
+      font-size: 9px;
+      color: #555555;
     }
 
     .card-content {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
+      padding-right: 35px; /* Espaço para não sobrepor o contador +N */
     }
 
-    /* Destaque para títulos compridos */
     .card-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--accent-color);
       text-decoration: none;
       line-height: 1.35;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: inline-block;
     }
 
@@ -218,20 +238,17 @@
       text-decoration: underline;
     }
 
-    .card-metadata {
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
+    .card-channel {
+      font-size: 13px;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      display: block;
     }
 
-    /* videoID bem discreto */
-    .videoid-tag {
-      font-family: monospace;
-      font-size: 10px;
-      color: #666666;
+    .card-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
     }
 
     .status-removed {
@@ -241,15 +258,24 @@
       margin-left: 6px;
     }
 
-    /* Subdiretório / Gaveta para repetidos */
+    /* Botão/Indicador +N da Gaveta */
     .drawer-toggle {
-      margin-top: 10px;
-      background: transparent;
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: var(--bg-primary);
       color: var(--accent-color);
-      border: 1px dashed var(--accent-color);
-      padding: 5px 10px;
+      border: 1px solid var(--accent-color);
+      border-radius: 12px;
+      padding: 2px 8px;
       font-size: 12px;
-      align-self: flex-start;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .drawer-toggle:hover {
+      background: var(--accent-color);
+      color: var(--bg-primary);
     }
 
     .drawer-content {
@@ -257,14 +283,52 @@
       padding-left: 12px;
       border-left: 2px solid var(--accent-color);
       display: none;
-      background-color: var(--bg-drawer);
+      background-color: var(--bg-card); /* Fundo igual ao do card principal */
       border-radius: 0 8px 8px 0;
       padding-top: 8px;
       padding-bottom: 8px;
+      width: 100%;
+    }
+
+    /* Cards dentro da gaveta ficam com tom mais escuro */
+    .drawer-content .card {
+      background-color: var(--bg-drawer);
+      margin-bottom: 8px;
     }
 
     .drawer-content.open {
       display: block;
+    }
+  
+
+    /* Ajuste para Celular */
+    @media (max-width: 600px) {
+      .card {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px;
+      }
+      .card-media-block {
+        width: 110px;
+      }
+      .card-thumb {
+        height: 62px;
+      }
+      .card-title {
+        font-size: 13px;
+      }
+      .card-channel {
+        font-size: 11px;
+      }
+      .card-date {
+        font-size: 10px;
+      }
+      .drawer-toggle {
+        bottom: 8px;
+        right: 8px;
+        font-size: 11px;
+        padding: 1px 6px;
+      }
     }
 
     /* ==========================================================================
@@ -341,9 +405,10 @@
   <header class="top-bar" id="topBar">
     <div class="controls-container">
       
-      <!-- Busca Instantânea sem Vogais/Flexível -->
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar por título...">
+<!-- Busca Instantânea com restrição de Vogais e Botão de Limpar -->
+      <div class="search-box" style="position: relative;">
+        <input type="text" id="searchInput" placeholder="Buscar por título..." style="padding-right: 32px;">
+        <button id="clearSearchBtn" title="Limpar busca" style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; display: none; padding: 2px 6px;">✕</button>
       </div>
 
       <!-- Modos de Visualização & Ordenamento -->
@@ -444,14 +509,14 @@
        6. FUNÇÕES AUXILIARES (TEXTO, DURAÇÃO, DATAS)
        ========================================================================== */
 
-    // Normalização flexível desconsiderando acentos e vogais
+    // Normalização flexível desconsiderando acentos
     function normalizeText(str) {
       if (!str) return '';
       return str
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[aeiou]/g, '') // Desconsidera todas as vogais
+        .replace(/[ei]/g, '') // Restrição de Vogais
         .replace(/[^a-z0-9]/g, '');
     }
 
@@ -643,7 +708,7 @@
       setupScrollObserver();
     }
 
-    // Criação do Elemento HTML do Card
+    // Criação do Elemento HTML do Card com Estrutura Reformulada
     function createCardElement(item, duplicates = []) {
       const card = document.createElement('div');
       card.className = 'card';
@@ -655,38 +720,42 @@
       const thumbUrl = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
       const videoUrl = `https://www.youtube.com/watch?v=${item.videoId}`;
 
-      // Exibe aviso de removido apenas se privacyStatus for "removed"
       let privacyNotice = item.privacyStatus === 'removed' 
         ? `<span class="status-removed">(Vídeo removido)</span>` 
         : '';
 
       card.innerHTML = `
-        <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail" loading="lazy">
+        <div class="card-media-block">
+          <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail" loading="lazy">
+          <div class="thumb-footer-bar">
+            <span class="videoid-tag">${item.videoId}</span>
+            <span class="duration-tag">${formatDuration(item.duracaoSegundos)}</span>
+          </div>
+        </div>
         <div class="card-content">
           <div>
             <a href="${videoUrl}" target="_blank" class="card-title">${item.titulo}</a>
             ${privacyNotice}
           </div>
-          <div class="card-metadata">
-            <span><strong>Canal:</strong> ${item.canal}</span>
-            <span><strong>Duração:</strong> ${formatDuration(item.duracaoSegundos)}</span>
-            <span><strong>Publicado:</strong> ${formatLocalDateTime(item.dataPublicacao)}</span>
-            <span class="videoid-tag">ID: ${item.videoId}</span>
-          </div>
+          <span class="card-channel">${item.canal}</span>
+          <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}</span>
+
           ${duplicates.length > 0 ? `
-            <button class="drawer-toggle" onclick="toggleDrawer(this)">
-              Gaveta (+${duplicates.length} ocorrência(s))
+            <button class="drawer-toggle" onclick="toggleDrawer(this)" title="Ver ocorrências">
+              +${duplicates.length}
             </button>
             <div class="drawer-content"></div>
           ` : ''}
         </div>
       `;
 
-      // Preenche a gaveta do modo consolidado com cards completos
+// Preenche a gaveta do modo consolidado com cards completos e classe específica
       if (duplicates.length > 0) {
         const drawerContent = card.querySelector('.drawer-content');
         duplicates.forEach(dupItem => {
-          drawerContent.appendChild(createCardElement(dupItem, []));
+          const childCard = createCardElement(dupItem, []);
+          childCard.classList.add('child-card');
+          drawerContent.appendChild(childCard);
         });
       }
 
@@ -833,14 +902,34 @@
 
       loadDatabase();
 
-      // Busca Instantânea com Debounce
-      document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      function updateClearBtnVisibility() {
+        clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+      }
+
+      // Garante visibilidade correta ao carregar estado salvo
+      updateClearBtnVisibility();
+
+      // Busca Instantânea com Debounce e Visibilidade do Botão Limpar
+      searchInput.addEventListener('input', (e) => {
+        updateClearBtnVisibility();
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
           state.searchQuery = e.target.value;
           saveState();
           renderList();
         }, CONFIG.DEBOUNCE_DELAY_MS);
+      });
+
+      // Clique no Botão de Limpar
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        updateClearBtnVisibility();
+        saveState();
+        renderList();
       });
 
       // Modos de Visualização e Ordenação
