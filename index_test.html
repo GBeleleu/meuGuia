@@ -405,9 +405,10 @@
   <header class="top-bar" id="topBar">
     <div class="controls-container">
       
-      <!-- Busca Instantânea sem Vogais/Flexível -->
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar por título...">
+<!-- Busca Instantânea com restrição de Vogais e Botão de Limpar -->
+      <div class="search-box" style="position: relative;">
+        <input type="text" id="searchInput" placeholder="Buscar por título..." style="padding-right: 32px;">
+        <button id="clearSearchBtn" title="Limpar busca" style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; display: none; padding: 2px 6px;">✕</button>
       </div>
 
       <!-- Modos de Visualização & Ordenamento -->
@@ -508,14 +509,14 @@
        6. FUNÇÕES AUXILIARES (TEXTO, DURAÇÃO, DATAS)
        ========================================================================== */
 
-    // Normalização flexível desconsiderando acentos e vogais
+    // Normalização flexível desconsiderando acentos
     function normalizeText(str) {
       if (!str) return '';
       return str
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[aeiou]/g, '') // Desconsidera todas as vogais
+        .replace(/[ei]/g, '') // Restrição de Vogais
         .replace(/[^a-z0-9]/g, '');
     }
 
@@ -901,14 +902,34 @@
 
       loadDatabase();
 
-      // Busca Instantânea com Debounce
-      document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      function updateClearBtnVisibility() {
+        clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+      }
+
+      // Garante visibilidade correta ao carregar estado salvo
+      updateClearBtnVisibility();
+
+      // Busca Instantânea com Debounce e Visibilidade do Botão Limpar
+      searchInput.addEventListener('input', (e) => {
+        updateClearBtnVisibility();
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
           state.searchQuery = e.target.value;
           saveState();
           renderList();
         }, CONFIG.DEBOUNCE_DELAY_MS);
+      });
+
+      // Clique no Botão de Limpar
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        updateClearBtnVisibility();
+        saveState();
+        renderList();
       });
 
       // Modos de Visualização e Ordenação
