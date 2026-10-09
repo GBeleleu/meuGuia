@@ -304,7 +304,7 @@
       width: 100%;
     }
 
-    /* s dentro da gaveta ficam com tom mais escuro */
+    /* Cards dentro da gaveta ficam com tom mais escuro */
     .drawer-content . {
       background-color: var(--bg-drawer);
       margin-bottom: 8px;
@@ -313,8 +313,56 @@
     .drawer-content.open {
       display: block;
     }
-  
+    
+    /* Menu de Progresso do Card */
+    .card-status-select {
+      margin-top: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      width: fit-content;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
 
+    /* Cores das opções/estados selecionados */
+    .card-status-select.status-null {
+      background-color: var(--bg-primary);
+      color: var(--text-muted);
+      border-color: var(--border-color);
+    }
+
+    .card-status-select.status-0 {
+      background-color: #2e7d32; /* Verde - Visto */
+      color: #ffffff;
+      border-color: #4caf50;
+    }
+
+    .card-status-select.status-1 {
+      background-color: #c62828; /* Vermelho - Alta */
+      color: #ffffff;
+      border-color: #ef5350;
+    }
+
+    .card-status-select.status-2 {
+      background-color: #ef6c00; /* Laranja - Média */
+      color: #ffffff;
+      border-color: #ff9800;
+    }
+
+    .card-status-select.status-3 {
+      background-color: #fbc02d; /* Amarelo - Baixa */
+      color: #121212;
+      border-color: #fdd835;
+    }
+
+    .card-status-select option {
+      background-color: var(--bg-secondary);
+      color: var(--text-main);
+    }
+  
     /* Ajuste para Celular */
     @media (max-width: 600px) {
       . {
@@ -819,7 +867,7 @@
       setupScrollObserver();
     }
 
-    // Criação do Elemento HTML do Card com Estrutura Reformulada
+   	// Criação do Elemento HTML do Card com Estrutura Reformulada
     function createCardElement(item, duplicates = []) {
       const card = document.createElement('div');
       card.className = 'card';
@@ -840,6 +888,13 @@
         ? `<span class="live-badge" title="Live / Transmissão ao vivo"></span>` 
         : '';
 
+      // Obtém o progresso salvo do vídeo no cache local (ou nulo se não houver)
+      const currentStatus = (window.userProgressCache && window.userProgressCache[item.videoId] !== undefined)
+        ? window.userProgressCache[item.videoId]
+        : '';
+
+      const statusClass = currentStatus !== '' ? `status-${currentStatus}` : 'status-null';
+
       card.innerHTML = `
         <div class="card-media-block">
           <img class="card-thumb" src="${thumbUrl}" alt="Thumbnail" loading="lazy">
@@ -856,6 +911,15 @@
           <span class="card-channel">${item.canal}</span>
           <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}${liveBadge}</span>
 
+          <!-- Menu suspenso de Progresso -->
+          <select class="card-status-select ${statusClass}" onchange="handleStatusChange(this, '${item.videoId}')">
+            <option value="" ${currentStatus === '' ? 'selected' : ''}>Status...</option>
+            <option value="0" ${currentStatus === 0 ? 'selected' : ''}>Visto</option>
+            <option value="1" ${currentStatus === 1 ? 'selected' : ''}>Alta</option>
+            <option value="2" ${currentStatus === 2 ? 'selected' : ''}>Média</option>
+            <option value="3" ${currentStatus === 3 ? 'selected' : ''}>Baixa</option>
+          </select>
+
           ${duplicates.length > 0 ? `
             <button class="drawer-toggle" onclick="toggleDrawer(this)" title="Ver ocorrências">
               +${duplicates.length}
@@ -865,7 +929,7 @@
         </div>
       `;
 
-// Preenche a gaveta do modo consolidado com cards completos e classe específica
+      // Preenche a gaveta do modo consolidado com cards completos e classe específica
       if (duplicates.length > 0) {
         const drawerContent = card.querySelector('.drawer-content');
         duplicates.forEach(dupItem => {
@@ -876,6 +940,26 @@
       }
 
       return card;
+    }
+
+    // Handler para alterar a classe visual imediatamente e disparar o salvamento
+    function handleStatusChange(selectEl, videoId) {
+      const value = selectEl.value;
+
+      // Remove classes antigas
+      selectEl.className = 'card-status-select';
+      
+      // Adiciona a nova classe de cor
+      if (value === "") {
+        selectEl.classList.add('status-null');
+      } else {
+        selectEl.classList.add(`status-${value}`);
+      }
+
+      // Invoca a função global do Firebase
+      if (typeof window.updateVideoProgress === 'function') {
+        window.updateVideoProgress(videoId, value);
+      }
     }
 
     function toggleDrawer(btn) {
