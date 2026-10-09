@@ -38,24 +38,37 @@
   window.userProgressCache = {};
 
   // Observa mudanças na autenticação do usuário
-  onAuthStateChanged(auth, (user) => {
-    window.currentUser = user;
-    if (user) {
-      // Escuta mudanças em tempo real na coleção de progresso do usuário
-      const progressRef = doc(db, "users", user.uid);
-      onSnapshot(progressRef, (docSnap) => {
-        if (docSnap.exists()) {
-          window.userProgressCache = docSnap.data().progress || {};
-        } else {
-          window.userProgressCache = {};
-        }
-        if (typeof renderList === 'function') renderList();
-      });
-    } else {
-      // Login automático anônimo ou controle via popup (Exemplo Google)
-      signInWithPopup(auth, new GoogleAuthProvider()).catch(console.error);
-    }
-  });
+onAuthStateChanged(auth, (user) => {
+  window.currentUser = user;
+  if (user) {
+    console.log("Usuário autenticado:", user.email || user.uid);
+    // Escuta mudanças em tempo real na coleção de progresso do usuário
+    const progressRef = doc(db, "users", user.uid);
+    onSnapshot(progressRef, (docSnap) => {
+      if (docSnap.exists()) {
+        window.userProgressCache = docSnap.data().progress || {};
+      } else {
+        window.userProgressCache = {};
+      }
+      if (typeof renderList === 'function') renderList();
+    });
+  } else {
+    window.userProgressCache = {};
+    console.log("Nenhum usuário autenticado.");
+  }
+});
+
+// Função global para acionar o login via clique do usuário
+window.loginWithGoogle = async function() {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    console.log("Login realizado com sucesso!", result.user);
+  } catch (error) {
+    console.error("Erro ao fazer login:", error.code, error.message);
+    alert("Erro ao autenticar: " + error.message);
+  }
+};
 
   // Função global para salvar o progresso de um vídeo específico
   window.updateVideoProgress = async function(videoId, selectedValue) {
