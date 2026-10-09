@@ -1,4 +1,3 @@
-<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
   import { 
     getFirestore, 
@@ -83,4 +82,3 @@
       console.error("Erro ao sincronizar com Firestore:", err);
     }
   };
-</script>
