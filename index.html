@@ -18,7 +18,7 @@
       --text-muted: #aaaaaa;
       --accent-color: #f7f7f7;
       --border-color: #333333;
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     * {
@@ -171,12 +171,12 @@
     /* Novo Layout dos Cards */
     .card {
       background-color: var(--bg-card);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 14px;
+      border-radius: 10px; /* Arredondamento dos cantos dos cards */
+      padding: 5px; /* Espaçamento interno dentro de cada card */
+      margin-bottom: 10px; /* Espaçamento vertical ENTRE os cards */
       display: flex;
-      gap: 14px;
-      border: 1px solid var(--border-color);
+      gap: 14px; /* Espaço horizontal entre a Thumbnail e o Texto */
+      border: 1px solid var(--border-color); /* Largura e cor da borda */
       position: relative;
     }
 
@@ -253,6 +253,18 @@
       display: block;
     }
 
+    /* Indicador de Live */
+    .live-badge {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #ff0000;
+      border-radius: 50%;
+      margin-left: 6px;
+      vertical-align: middle;
+      box-shadow: 0 0 6px rgba(255, 0, 0, 0.8);
+    }
+
     .status-removed {
       color: #ff5555;
       font-weight: bold;
@@ -285,15 +297,15 @@
       padding-left: 12px;
       border-left: 2px solid var(--accent-color);
       display: none;
-      background-color: var(--bg-card); /* Fundo igual ao do card principal */
+      background-color: var(--bg-); /* Fundo igual ao do  principal */
       border-radius: 0 8px 8px 0;
       padding-top: 8px;
       padding-bottom: 8px;
       width: 100%;
     }
 
-    /* Cards dentro da gaveta ficam com tom mais escuro */
-    .drawer-content .card {
+    /* s dentro da gaveta ficam com tom mais escuro */
+    .drawer-content . {
       background-color: var(--bg-drawer);
       margin-bottom: 8px;
     }
@@ -305,18 +317,18 @@
 
     /* Ajuste para Celular */
     @media (max-width: 600px) {
-      .card {
+      . {
         flex-direction: row;
         gap: 10px;
         padding: 10px;
       }
-      .card-media-block {
+      .-media-block {
         width: 110px;
       }
-      .card-thumb {
+      .-thumb {
         height: 62px;
       }
-      .card-title {
+      .-title {
         font-size: 13px;
       }
       .card-channel {
@@ -725,6 +737,11 @@
       let privacyNotice = item.privacyStatus === 'removed' 
         ? `<span class="status-removed">(Vídeo removido)</span>` 
         : '';
+      
+      // Indicador de live
+      const liveBadge = item.eLive 
+        ? `<span class="live-badge" title="Live / Transmissão ao vivo"></span>` 
+        : '';
 
       card.innerHTML = `
         <div class="card-media-block">
@@ -740,7 +757,7 @@
             ${privacyNotice}
           </div>
           <span class="card-channel">${item.canal}</span>
-          <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}</span>
+          <span class="card-date">${formatLocalDateTime(item.dataPublicacao)}${liveBadge}</span>
 
           ${duplicates.length > 0 ? `
             <button class="drawer-toggle" onclick="toggleDrawer(this)" title="Ver ocorrências">
