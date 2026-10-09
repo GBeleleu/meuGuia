@@ -427,16 +427,17 @@
 
       <!-- Modos de Visualização & Ordenamento -->
       <div class="filter-group">
-        <select id="viewModeSelect">
+        <="viewModeSelect">
           <option value="consolidado">Consolidado (Agrupado por conteúdo)</option>
           <option value="sequenciado">Sequenciado (Canais mesclados)</option>
           <option value="sequenciado-canais">Sequenciado (Canais separados)</option>
         </select>
 
         <select id="sortBySelect">
-          <option value="data">Data de Publicação</option>
-          <option value="titulo">Título</option>
+          <option value="data">Publicação</option>
           <option value="duracao">Duração</option>
+          <option value="ocorrencias">Ocorrências</option>
+          <option value="titulo">Título</option>
         </select>
 
         <button id="sortOrderBtn" title="Inverter Ordem">Asc ▲</button>
@@ -686,7 +687,31 @@
           }
         });
 
-        masterMap.forEach(masterItem => {
+        // Converte os masters em um array para podermos ordenar
+        let masterList = Array.from(masterMap.values());
+
+        // Aplica a ordenação
+        masterList.sort((a, b) => {
+          let valA, valB;
+          if (state.sortBy === 'ocorrencias') {
+            valA = (duplicatesMap.get(a.videoId) || []).length;
+            valB = (duplicatesMap.get(b.videoId) || []).length;
+          } else if (state.sortBy === 'titulo') {
+            valA = a.titulo.toLowerCase();
+            valB = b.titulo.toLowerCase();
+            return state.sortAscending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+          } else if (state.sortBy === 'duracao') {
+            valA = a.duracaoSegundos || 0;
+            valB = b.duracaoSegundos || 0;
+          } else {
+            // 'data'
+            valA = new Date(a.dataPublicacao);
+            valB = new Date(b.dataPublicacao);
+          }
+          return state.sortAscending ? valA - valB : valB - valA;
+        });
+
+        masterList.forEach(masterItem => {
           const duplicates = duplicatesMap.get(masterItem.videoId) || [];
           container.appendChild(createCardElement(masterItem, duplicates));
         });
@@ -719,6 +744,16 @@
         });
       }
 
+      // Habilita/desabilita a opção "Ocorrências" no select dependendo do modo de visão
+      const ocorrenciasOption = document.querySelector('#sortBySelect option[value="ocorrencias"]');
+      if (ocorrenciasOption) {
+        ocorrenciasOption.disabled = (state.viewMode !== 'consolidado');
+        if (state.viewMode !== 'consolidado' && state.sortBy === 'ocorrencias') {
+          state.sortBy = 'data';
+          document.getElementById('sortBySelect').value = 'data';
+        }
+      }
+      
       setupScrollObserver();
     }
 
