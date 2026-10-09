@@ -524,15 +524,78 @@
        6. FUNÇÕES AUXILIARES (TEXTO, DURAÇÃO, DATAS)
        ========================================================================== */
 
-    // Normalização flexível desconsiderando acentos
+// Funções de Busca por Título
+// Normalização básica: Apenas remove acentos e caracteres especiais, mantendo todas as letras e números
     function normalizeText(str) {
       if (!str) return '';
       return str
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[ei]/g, '') // Restrição de Vogais
-        .replace(/[^a-z0-9]/g, '');
+        .replace(/[^a-z0-9\s]/g, '')
+        .trim();
+    }
+
+    // Algoritmo de Distância de Levenshtein: Calcula o número de edições entre duas palavras
+    function levenshteinDistance(a, b) {
+      if (a.length === 0) return b.length;
+      if (b.length === 0) return a.length;
+
+      const matrix = [];
+
+      for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+      }
+
+      for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+      }
+
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          if (b.charAt(i - 1) === a.charAt(j - 1)) {
+            matrix[i][j] = matrix[i - 1][j - 1];
+          } else {
+            matrix[i][j] = Math.min(
+              matrix[i - 1][j - 1] + 1, // Substituição
+              matrix[i][j - 1] + 1,     // Inserção
+              matrix[i - 1][j] + 1      // Remoção
+            );
+          }
+        }
+      }
+
+      return matrix[b.length][a.length];
+    }
+
+    // Avalia se o termo buscado bate exatamente ou de forma aproximada com o título
+    function fuzzyMatch(title, query) {
+      const cleanTitle = normalizeText(title);
+      const cleanQuery = normalizeText(query);
+
+      if (!cleanQuery) return true;
+      
+      // 1. Busca Exata por Substring (prioridade rápida)
+      if (cleanTitle.includes(cleanQuery)) return true;
+
+      // 2. Busca Imprecisa palavra por palavra (Fuzzy)
+      const titleWords = cleanTitle.split(/\s+/);
+      const queryWords = cleanQuery.split(/\s+/);
+
+      // Para cada palavra digitada no campo de busca
+      return queryWords.every(qWord => {
+        // Tolerância de erros ajustada ao tamanho da palavra
+        let maxDistance = 1;
+        if (qWord.length > 7) maxDistance = 2; // Palavras longas toleram até 2 erros
+
+        return titleWords.some(tWord => {
+          // Checa contendo ou similaridade de distância
+          if (tWord.includes(qWord)) return true;
+          if (Math.abs(tWord.length - qWord.length) > maxDistance) return false;
+          
+          return levenshteinDistance(tWord, qWord) <= maxDistance;
+        });
+      });
     }
 
     // Formatação de data/hora para fuso horário e idioma local do dispositivo
@@ -638,10 +701,9 @@
       // 1. Ocultar Canais Desmarcados
       let items = videoDatabase.filter(item => !state.hiddenChannels.includes(item.canal));
 
-      // 2. Filtragem por Busca sem Vogais
-      const normalizedQuery = normalizeText(state.searchQuery);
-      if (normalizedQuery) {
-        items = items.filter(item => normalizeText(item.titulo).includes(normalizedQuery));
+      // 2. Filtragem por Busca Imprecisa (Fuzzy Match)
+      if (state.searchQuery.trim() !== '') {
+        items = items.filter(item => fuzzyMatch(item.titulo, state.searchQuery));
       }
 
       if (items.length === 0) {
